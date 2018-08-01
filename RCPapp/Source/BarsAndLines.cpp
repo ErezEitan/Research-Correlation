@@ -9,6 +9,7 @@
 #include "BarsAndLines.h"
 #include "MainComponent.h"
 
+const int32_t offsetReducedFromMainArea = 30;
 
 //==============================================================================
 BarAndLine::BarAndLine()
@@ -36,21 +37,22 @@ void BarAndLine::paint (Graphics& g)
         g.drawLine(m_lineGraphVertical);
         
         int32_t numOfBars = m_rcpDescriptors.GetRcpDescriptor().m_numOfBars;
-        Rectangle<int> area = getBounds();
+        int32_t barSizeWidthInPixel = m_lineGraphVertical.getLength() / numOfBars;
+        Rectangle<int> area;
+        
         for (int32_t i = 0; i < numOfBars; ++i)
         {
-            Line<float> lineBarsVertical(i * (m_lineGraphVertical.getLength() / numOfBars) + 30, area.getBottom() - 40, i * (m_lineGraphVertical.getLength() / numOfBars) + 30, area.getBottom() - 20);
-            g.drawLine(lineBarsVertical);
-            Rectangle<int> textArea(lineBarsVertical.getStart().getX(), lineBarsVertical.getEnd().getY(), 20, 20);
+            Line<float> seperatelinesVertical(i * barSizeWidthInPixel + 30, m_lineGraphVertical.getEnd().getY() + 10, i * barSizeWidthInPixel + 30, m_lineGraphVertical.getEnd().getY() - 10);
+            g.drawLine(seperatelinesVertical);
+            area.setBounds(seperatelinesVertical.getStart().getX(), seperatelinesVertical.getEnd().getY() + 10, 20, 20);
             g.setFont(10.0f);
-            g.drawFittedText(std::to_string(i).c_str(), textArea, Justification::centredLeft, 5.f);
+            g.drawFittedText(std::to_string(i).c_str(), area, Justification::centredLeft, 5.f);
             
             Line<float> lineBarsHorizontal(15, i * (m_lineGraphHorizontal.getLength() / numOfBars) + 30, 40,i* (m_lineGraphHorizontal.getLength() / numOfBars) + 30);
             g.drawLine(lineBarsHorizontal);
-            
-            Rectangle<int> textAreaH(lineBarsHorizontal.getStart().getX(), lineBarsHorizontal.getEndY(), 20, 20);
+            area.setBounds(lineBarsHorizontal.getStart().getX(), lineBarsHorizontal.getEndY(), 20, 20);
             g.setFont(10.0f);
-            g.drawFittedText(std::to_string(i).c_str(), textAreaH, Justification::centredLeft, 5.f);
+            g.drawFittedText(std::to_string(i).c_str(), area, Justification::centredLeft, 5.f);
         }
     }
 }
@@ -64,12 +66,14 @@ void BarAndLine::resized()
     // update their positions.
     
     Rectangle<int> area = getLocalBounds();
+    area.reduce(30, 30);
     
-    Line<float> lineGraphHorizontal(area.getTopLeft().x + 30, area.getTopLeft().y + 30, area.getTopLeft().x + 30, area.getBottomLeft().y - 30);
-    m_lineGraphHorizontal = lineGraphHorizontal;
-    Line<float> lineGraphVertical(area.getBottomLeft().x + 30, area.getBottomLeft().y - 30, area.getBottomRight().x - 30, area.getBottomLeft().y - 30);
-    m_lineGraphVertical = lineGraphVertical;
-    
+    m_lineGraphHorizontal.setStart(area.getTopLeft().x, area.getTopLeft().y);
+    m_lineGraphHorizontal.setEnd(area.getTopLeft().x, area.getBottomLeft().y);
+
+    m_lineGraphVertical.setStart(area.getBottomLeft().x, area.getBottomLeft().y);
+    m_lineGraphVertical.setEnd(area.getBottomRight().x, area.getBottomLeft().y);
+
     CalculateAndSetBarsSize();
 }
 
@@ -98,7 +102,8 @@ void BarAndLine::CalculateAndSetBarsSize()
             m_vBars.resize(numOfBars);
             auto& vBarDescriptor = m_rcpDescriptors.GetBarDescriptor();
             
-            int32_t sizeOfBarInPixel = getBounds().getWidth() / m_rcpDescriptors.GetRcpDescriptor().m_numOfBars;
+            int32_t sizeOfBarWidthInPixel = m_lineGraphVertical.getLength() / numOfBars;
+             int32_t sizeOfBarHightInPixel = m_lineGraphHorizontal.getLength() / numOfBars;
             
             for (int32_t i = 0; i< m_vBars.size(); ++i)
             {
@@ -106,7 +111,7 @@ void BarAndLine::CalculateAndSetBarsSize()
                 m_vBars[i]->SetBarIndex(i);
                 m_vBars[i]->addMouseListener(this, false);
                 addAndMakeVisible(*m_vBars[i]);
-                Rectangle<int> barBounds(30, i * 20, sizeOfBarInPixel * vBarDescriptor[i]->m_barLength, 20);
+                Rectangle<int> barBounds(30, (i * sizeOfBarHightInPixel) + 30, sizeOfBarWidthInPixel * vBarDescriptor[i]->m_barLength, sizeOfBarHightInPixel);
                 m_vBars[i]->setBounds(barBounds);
                 m_vBars[i]->SetBarDescriptor(*vBarDescriptor[i]);
             }
@@ -116,10 +121,11 @@ void BarAndLine::CalculateAndSetBarsSize()
                 for (int32_t j = 0; j < vBarDescriptor[cur]->m_vWhichBarAfterMe.size(); ++j)
                 {
                     int32_t barAfterMe = vBarDescriptor[cur]->m_vWhichBarAfterMe[j];
-                    int newAxisX = m_vBars[cur]->getBounds().getX() + vBarDescriptor[cur]->m_barLength * sizeOfBarInPixel;
+                    int newAxisX = m_vBars[cur]->getBounds().getX() + vBarDescriptor[cur]->m_barLength * sizeOfBarWidthInPixel;
                     Rectangle<int> newBarBounds = m_vBars[barAfterMe]->getBounds();
                     newBarBounds.setX(newAxisX);
                     m_vBars[barAfterMe]->setBounds(newBarBounds);
+                    
                 }
             }
         }

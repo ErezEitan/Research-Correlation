@@ -29,7 +29,7 @@ public:
         g.setColour(Colours::orange);
         auto area = getLocalBounds().reduced(2);
         g.drawRoundedRectangle(area.toFloat(), 2.0f, 2.0f);
-        
+        g.fillRect(area);
         g.setColour(findColour(TextButton::textColourOffId));
         g.drawFittedText(m_barName, area, Justification::centredLeft, 1);
     }

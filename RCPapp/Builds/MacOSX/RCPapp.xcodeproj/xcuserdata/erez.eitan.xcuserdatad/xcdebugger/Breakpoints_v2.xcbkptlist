@@ -26,11 +26,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "../../Source/PharseRCPFileToDescriptors.cpp"
-            timestampString = "553886406.110407"
+            timestampString = "553886300.974833"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "104"
-            endingLineNumber = "104"
+            startingLineNumber = "53"
+            endingLineNumber = "53"
             landmarkName = "PharseRCPFileToDescriptors::PharseFileToDescriptors(const String&amp; in_string, const int32_t in_lineIndex)"
             landmarkType = "7">
          </BreakpointContent>
@@ -41,13 +41,61 @@
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "../../Source/PharseRCPFileToDescriptors.cpp"
-            timestampString = "553886300.974833"
+            filePath = "../../Source/BarsAndLines.cpp"
+            timestampString = "554830776.987377"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "53"
-            endingLineNumber = "53"
-            landmarkName = "PharseRCPFileToDescriptors::PharseFileToDescriptors(const String&amp; in_string, const int32_t in_lineIndex)"
+            startingLineNumber = "106"
+            endingLineNumber = "106"
+            landmarkName = "BarAndLine::CalculateAndSetBarsSize()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "../../Source/BarsAndLines.cpp"
+            timestampString = "554830776.987377"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "108"
+            endingLineNumber = "108"
+            landmarkName = "BarAndLine::CalculateAndSetBarsSize()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "../../Source/BarsAndLines.cpp"
+            timestampString = "554830471.710749"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "54"
+            endingLineNumber = "54"
+            landmarkName = "BarAndLine::paint (Graphics&amp; g)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "../../Source/BarsAndLines.cpp"
+            timestampString = "554838101.26998"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "69"
+            endingLineNumber = "69"
+            landmarkName = "BarAndLine::resized()"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

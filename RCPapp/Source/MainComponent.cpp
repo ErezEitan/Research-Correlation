@@ -7,6 +7,7 @@
 */
 
 #include "MainComponent.h"
+#include "FactoryDefaultControls.h"
 #include <string>
 
 
@@ -16,10 +17,13 @@ MainComponent::MainComponent()
 {
 	setSize(620, 620);
     
-    addAndMakeVisible(m_barsAndLInes);
-	addAndMakeVisible(m_toolBar);
-
-    m_toolBar.AddListner(static_cast<ComponentCallbackListenerAbs*>(&m_barsAndLInes));
+    m_vControls.push_back(CreateDefaultControls("ToolBar", this));
+    m_vControls.push_back(CreateDefaultControls("BarAndLine", this));
+    m_vControls[0]->AddListner(m_vControls[1]);
+    for (auto controls : m_vControls)
+    {
+        addAndMakeVisible(*controls);
+    }
 }
 
 //==============================================================================
@@ -35,6 +39,8 @@ void MainComponent::resized()
     // This is called when the MainComponent is resized.
     // If you add any child components, this is where you should
     // update their positions.
-    m_toolBar.setSize(getWidth(), m_toolBar.getHeight());
-    m_barsAndLInes.setBounds(30, m_toolBar.getHeight(), getWidth() - 30, getHeight() - m_toolBar.getHeight());
+    if (!m_vControls.empty()) {
+        m_vControls[0]->setSize(getWidth(), 50);
+        m_vControls[1]->setBounds(30, m_vControls[0]->getHeight(), getWidth() - 30, getHeight() - m_vControls[0]->getHeight());
+    }
 }

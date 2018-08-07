@@ -30,7 +30,9 @@ private:
 	std::vector<std::shared_ptr<BarDescriptorStruct>> m_vBarDescriptor;
 
 	// Private Functions
-	void PharseFileToDescriptors(const String& in_string, const int32_t in_lineIndex);
+    
+    void PharseFileRCPDescriptorsHeader(const String& in_string, const int in_lineIndex);
+	void PharseFileToDescriptors(const String& in_string, const int in_lineIndex);
 	void ResetAllDescriptors();
 
 

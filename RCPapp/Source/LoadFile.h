@@ -5,6 +5,7 @@
 #include "../JuceLibraryCode/JuceHeader.h"
 #include "juce_core/system/juce_PlatformDefs.h"
 #include "Listener.h"
+#include "CompenentControls.h"
 
 
 enum DialogType
@@ -13,17 +14,16 @@ enum DialogType
 	saveChooser,
 };
 
-
 //==============================================================================
-class ToolBar : public Component
+class ToolBar : public CompenentControls
 {
 public:
-	ToolBar();
+    ToolBar(MainComponent* in_mainComponent);
 	~ToolBar() {};
 
 	void paint(Graphics& g) override;
 	void resized() override;
-    void AddListner(ComponentCallbackListenerAbs* in_pListener) { m_listener.AddListener(in_pListener); }
+    void AddListner(std::shared_ptr<ComponentCallbackListenerAbs> in_pListener) override { m_listener.AddListener(in_pListener); }
     
 private:
 	// Private Members

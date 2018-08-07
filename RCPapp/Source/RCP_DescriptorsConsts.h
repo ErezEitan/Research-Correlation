@@ -24,22 +24,24 @@ enum eBarDescriptor
 	eHistogramWeight,
 	eDummy,
 	eWhichBarAfterMe,
+    eWhichBarBeforeMe,
 	eNumOf_BarDescriptor
 };
 
 struct RCPHeaderDescriptor
 {
-    int32_t m_numOfBars = -1;
-    int32_t m_numOfHistogram = -1;
-    std::vector<int32_t> m_vBorderLineHistogram;
+    int m_numOfBars = -1;
+    int m_numOfHistogram = -1;
+    std::vector<int> m_vBorderLineHistogram;
 };
 
 struct BarDescriptorStruct
 {
-	int32_t m_barLength = -1;
-	std::vector<int32_t> m_vHistogramWeight;
-	int32_t m_dummy = -1;
-	std::vector<int32_t> m_vWhichBarAfterMe;
+	int m_barLength = -1;
+	std::vector<int> m_vHistogramWeight;
+	int m_dummy = -1;
+    std::vector<int> m_vWhichBarBeforeMe;
+	std::vector<int> m_vWhichBarAfterMe;
 	eHeaderDescriptor m_headerDescriptor = eNumOfHeaderDescriptor;
 };
 

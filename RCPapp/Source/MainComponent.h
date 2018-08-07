@@ -3,7 +3,6 @@
 #define __MainComponent_h__
 
 #include "../JuceLibraryCode/JuceHeader.h"
-#include "BarsAndLines.h"
 #include <iostream>
 #include <cstdlib>
 
@@ -14,6 +13,7 @@
     your controls and content.
 */
 
+class CompenentControls;
 
 class MainComponent  : public Component
 {
@@ -24,12 +24,11 @@ public:
     
     //==============================================================================
     void resized() override;
-    
+
 private:
     //==============================================================================
     // Your private member variables go here...
-    ToolBar m_toolBar;
-    BarAndLine m_barsAndLInes;
+     std::vector<std::shared_ptr<CompenentControls>> m_vControls;
     
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MainComponent)
 };

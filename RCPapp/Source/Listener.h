@@ -25,11 +25,11 @@ class Listener : public ComponentCallbackListenerAbs
 public:
     Listener() {;}
     virtual ~Listener() {;}
-    void AddListener(ComponentCallbackListenerAbs* in_pListner) {m_pCallbackListener = in_pListner;}
+    void AddListener(std::shared_ptr<ComponentCallbackListenerAbs> in_pListner) {m_pCallbackListener = in_pListner;}
     virtual void Callback(const String in_msg) override;
     
 private:
-    ComponentCallbackListenerAbs* m_pCallbackListener = nullptr;
+    std::shared_ptr<ComponentCallbackListenerAbs> m_pCallbackListener = nullptr;
     
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(Listener);
 };

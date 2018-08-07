@@ -9,19 +9,8 @@
 #include "BarsAndLines.h"
 #include "MainComponent.h"
 
-const int32_t offsetReducedFromMainArea = 30;
+//const int kOffsetReducedFromMainArea = 30;
 
-//==============================================================================
-BarAndLine::BarAndLine()
-//==============================================================================
-{
-}
-
-//==============================================================================
-BarAndLine::~BarAndLine()
-//==============================================================================
-{
-}
 
 //==============================================================================
 void BarAndLine::paint (Graphics& g)
@@ -35,20 +24,18 @@ void BarAndLine::paint (Graphics& g)
         
         g.drawLine(m_lineGraphHorizontal);
         g.drawLine(m_lineGraphVertical);
-        
-        int32_t numOfBars = m_rcpDescriptors.GetRcpDescriptor().m_numOfBars;
-        int32_t barSizeWidthInPixel = m_lineGraphVertical.getLength() / numOfBars;
+
         Rectangle<int> area;
         
-        for (int32_t i = 0; i < numOfBars; ++i)
+        for (int i = 0; i < m_numOfBars; ++i)
         {
-            Line<float> seperatelinesVertical(i * barSizeWidthInPixel + 30, m_lineGraphVertical.getEnd().getY() + 10, i * barSizeWidthInPixel + 30, m_lineGraphVertical.getEnd().getY() - 10);
+            Line<float> seperatelinesVertical(i * m_barWidthInPixel + 30, m_lineGraphVertical.getEnd().getY() + 10, i * m_barWidthInPixel + 30, m_lineGraphVertical.getEnd().getY() - 10);
             g.drawLine(seperatelinesVertical);
             area.setBounds(seperatelinesVertical.getStart().getX(), seperatelinesVertical.getEnd().getY() + 10, 20, 20);
             g.setFont(10.0f);
             g.drawFittedText(std::to_string(i).c_str(), area, Justification::centredLeft, 5.f);
             
-            Line<float> lineBarsHorizontal(15, i * (m_lineGraphHorizontal.getLength() / numOfBars) + 30, 40,i* (m_lineGraphHorizontal.getLength() / numOfBars) + 30);
+            Line<float> lineBarsHorizontal(15, i * m_barHightInPixel + 30, 40,i * m_barHightInPixel + 30);
             g.drawLine(lineBarsHorizontal);
             area.setBounds(lineBarsHorizontal.getStart().getX(), lineBarsHorizontal.getEndY(), 20, 20);
             g.setFont(10.0f);
@@ -56,7 +43,13 @@ void BarAndLine::paint (Graphics& g)
         }
     }
 }
-
+/*
+//==============================================================================
+Line<float>& BarAndLine::CalculateSeperetorsVerticalsLines (Graphics& g)
+//==============================================================================
+{
+}
+*/
 //==============================================================================
 void BarAndLine::resized()
 //==============================================================================
@@ -65,16 +58,26 @@ void BarAndLine::resized()
     // If you add any child components, this is where you should
     // update their positions.
     
+    if(m_rcpDescriptors.IsFileOpen())
+    {
+        CalculateLinesDrawPoints();
+        CalculateAndSetBarsSize();
+    }
+}
+
+//==============================================================================
+void BarAndLine::CalculateLinesDrawPoints()
+//==============================================================================
+{
     Rectangle<int> area = getLocalBounds();
     area.reduce(30, 30);
     
     m_lineGraphHorizontal.setStart(area.getTopLeft().x, area.getTopLeft().y);
     m_lineGraphHorizontal.setEnd(area.getTopLeft().x, area.getBottomLeft().y);
-
+    
     m_lineGraphVertical.setStart(area.getBottomLeft().x, area.getBottomLeft().y);
     m_lineGraphVertical.setEnd(area.getBottomRight().x, area.getBottomLeft().y);
-
-    CalculateAndSetBarsSize();
+    
 }
 
  //==============================================================================
@@ -83,8 +86,8 @@ void BarAndLine::resized()
  {
      if(UTNoError(m_rcpDescriptors.OpenFilePathAndPharse(in_msg)))
      {
+         CalculateLinesDrawPoints();
          CalculateAndSetBarsSize();
-         repaint();
      }
  }
  
@@ -92,43 +95,48 @@ void BarAndLine::resized()
 void BarAndLine::CalculateAndSetBarsSize()
 //==============================================================================
 {
-    m_vBars.clear();
+   
     if(m_rcpDescriptors.IsFileOpen())
     {
-        int32_t numOfBars = m_rcpDescriptors.GetRcpDescriptor().m_numOfBars;
-        if (0 != numOfBars)
+        m_vBars.clear();
+        
+        m_numOfBars = m_rcpDescriptors.GetRcpDescriptor().m_numOfBars;
+        m_barWidthInPixel = m_lineGraphVertical.getLength() / m_numOfBars;
+        m_barHightInPixel = m_lineGraphHorizontal.getLength() / m_numOfBars;
+        
+        if (0 != m_numOfBars)
         {
-            m_vBars.clear();
-            m_vBars.resize(numOfBars);
+            m_vBars.resize(m_numOfBars);
             auto& vBarDescriptor = m_rcpDescriptors.GetBarDescriptor();
             
-            int32_t sizeOfBarWidthInPixel = m_lineGraphVertical.getLength() / numOfBars;
-             int32_t sizeOfBarHightInPixel = m_lineGraphHorizontal.getLength() / numOfBars;
-            
-            for (int32_t i = 0; i< m_vBars.size(); ++i)
+            for (int i = 0; i< m_vBars.size(); ++i)
             {
-                m_vBars[i] = std::make_shared<BarComponent>();
+                m_vBars[i] = std::make_shared<BarComponent>(m_pMainCompenent);
                 m_vBars[i]->SetBarIndex(i);
                 m_vBars[i]->addMouseListener(this, false);
                 addAndMakeVisible(*m_vBars[i]);
-                Rectangle<int> barBounds(30, (i * sizeOfBarHightInPixel) + 30, sizeOfBarWidthInPixel * vBarDescriptor[i]->m_barLength, sizeOfBarHightInPixel);
+                
+                Rectangle<int> barBounds(30, (i * m_barHightInPixel) + 30, m_barWidthInPixel * vBarDescriptor[i]->m_barLength, m_barHightInPixel);
                 m_vBars[i]->setBounds(barBounds);
                 m_vBars[i]->SetBarDescriptor(*vBarDescriptor[i]);
             }
             
-            for (int32_t cur = 0; cur < m_vBars.size(); ++cur)
+            for (int cur = 0; cur < m_vBars.size(); ++cur)
             {
-                for (int32_t j = 0; j < vBarDescriptor[cur]->m_vWhichBarAfterMe.size(); ++j)
+                for (int j = 0; j < vBarDescriptor[cur]->m_vWhichBarAfterMe.size(); ++j)
                 {
-                    int32_t barAfterMe = vBarDescriptor[cur]->m_vWhichBarAfterMe[j];
-                    int newAxisX = m_vBars[cur]->getBounds().getX() + vBarDescriptor[cur]->m_barLength * sizeOfBarWidthInPixel;
+                    int barAfterMe = vBarDescriptor[cur]->m_vWhichBarAfterMe[j];
+                    int newAxisX = m_vBars[cur]->getBounds().getX() + vBarDescriptor[cur]->m_barLength * m_barWidthInPixel;
                     Rectangle<int> newBarBounds = m_vBars[barAfterMe]->getBounds();
                     newBarBounds.setX(newAxisX);
                     m_vBars[barAfterMe]->setBounds(newBarBounds);
                     
+                    
                 }
             }
         }
+        
+        repaint();
     }
 }
 
@@ -148,15 +156,64 @@ void BarAndLine::mouseDrag(const MouseEvent& e)
 //==============================================================================
 {
     // Moves this Component according to the mouse drag event and applies our constraints to it
-    Rectangle<int> area = e.eventComponent->getBounds();
-    Point<int> curPosition = getMouseXYRelative();
-    Point<int> deltaDrag = (m_lastMouseLocation - curPosition);
-    
-    if (0 != deltaDrag.getX() && e.eventComponent != this)
+    if(e.eventComponent != this)
     {
-        area.setX(area.getX() - deltaDrag.getX());
-        e.eventComponent->setBounds(area);
+        BarComponent* pBarComponent = dynamic_cast<BarComponent*>(e.eventComponent);
+        
+        if (nullptr != pBarComponent)
+        {
+            Rectangle<int> area = pBarComponent->getBounds();
+            Point<int> curPosition = getMouseXYRelative();
+            Point<int> deltaDrag = (m_lastMouseLocation - curPosition);
+            
+            if (0 != deltaDrag.getX())
+            {
+                BarDescriptorStruct barDescriptor = pBarComponent->GetBarDescriptor();
+                Rectangle<int> areaBarBeforeMe = GetTheAreaLimiterFromBarsBeforeMe(barDescriptor.m_vWhichBarBeforeMe);
+                Rectangle<int> areaBarAfterMe = GetTheAreaLimiterFromBarsAfterMe(barDescriptor.m_vWhichBarAfterMe);
+                
+                if((area.getX() - deltaDrag.getX()) > areaBarBeforeMe.getRight())
+                {
+                    area.setX(area.getX() - deltaDrag.getX());
+                    e.eventComponent->setBounds(area);
+                }
+            }
+        }
+
+        m_lastMouseLocation = getMouseXYRelative();
+    }
+}
+
+//=================================================================================================
+Rectangle<int> BarAndLine::GetTheAreaLimiterFromBarsBeforeMe(const std::vector<int32_t>& in_vWhichBarBeforeMe)
+//==================================================================================================
+{
+    Rectangle<int> areaRetVal(0,0,0,0);
+    for(int i = 0; i < in_vWhichBarBeforeMe.size(); ++i)
+    {
+        Rectangle<int> areaBarBeforeMe = m_vBars[in_vWhichBarBeforeMe[i]]->getBounds();
+        if(areaRetVal.getRight() < areaBarBeforeMe.getX())
+        {
+            areaRetVal = areaBarBeforeMe;
+        }
     }
     
-    m_lastMouseLocation = getMouseXYRelative();
+    return areaRetVal;
+}
+
+//=================================================================================================
+Rectangle<int> BarAndLine::GetTheAreaLimiterFromBarsAfterMe(const std::vector<int32_t>& in_vWhichBarAfterMe)
+//==================================================================================================
+{
+    Rectangle<int> areaRetVal(0,0,0,0);
+    for(int i = 0; i < in_vWhichBarAfterMe.size(); ++i)
+    {
+        Rectangle<int> areaBarAfterMe = m_vBars[in_vWhichBarAfterMe[i]]->getBounds();
+        if(areaRetVal.getX() < areaBarAfterMe.getRight())
+        {
+            areaRetVal = areaBarAfterMe;
+        }
+    }
+    
+    return areaRetVal;
 }

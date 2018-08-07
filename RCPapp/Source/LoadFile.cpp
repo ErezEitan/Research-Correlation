@@ -1,7 +1,8 @@
 #include "LoadFile.h"
 
 //================
-ToolBar::ToolBar()
+ToolBar::ToolBar(MainComponent* in_mainComponent)
+    : CompenentControls(in_mainComponent)
 //================
 {
 	setOpaque(true);

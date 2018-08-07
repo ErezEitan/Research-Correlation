@@ -12,10 +12,13 @@
 		5CF4742BB568083B6BA8C858 /* include_juce_cryptography.mm in Sources */ = {isa = PBXBuildFile; fileRef = 851278B0FB595665D16DC3D5 /* include_juce_cryptography.mm */; };
 		642879627A8D7E3558C38CB3 /* MainComponent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AD46A7EAEA5A6FC473542A2F /* MainComponent.cpp */; };
 		6D8D0003AE52072DBDF2C7C6 /* include_juce_opengl.mm in Sources */ = {isa = PBXBuildFile; fileRef = 269BBB5765658EC7E70B94A8 /* include_juce_opengl.mm */; };
+		783170432119F040002131A5 /* CompenentControls.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 783170412119F040002131A5 /* CompenentControls.cpp */; };
+		78317046211A22EC002131A5 /* FactoryDefaultControls.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 78317044211A22EC002131A5 /* FactoryDefaultControls.cpp */; };
 		78C6140320FCF38400FA541C /* LoadFile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 78C613FE20FCF38400FA541C /* LoadFile.cpp */; };
 		78C6140420FCF38400FA541C /* PharseRCPFileToDescriptors.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 78C6140020FCF38400FA541C /* PharseRCPFileToDescriptors.cpp */; };
 		78CD295220FF920C00CF0241 /* Listener.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 78CD295020FF920C00CF0241 /* Listener.cpp */; };
 		78E52040210D7D850086A8BA /* BarsAndLines.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 78E5203E210D7D850086A8BA /* BarsAndLines.cpp */; };
+		78F63B4521196B2E00AF7832 /* HistogramsDraw.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 78F63B4321196B2E00AF7832 /* HistogramsDraw.cpp */; };
 		907BAA66FC081A67994D76F9 /* include_juce_graphics.mm in Sources */ = {isa = PBXBuildFile; fileRef = B1964E4ECF677FD9CD8E527F /* include_juce_graphics.mm */; };
 		923B799A2CEC351C21D7D9D3 /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 823D35537081FFBA6F16E251 /* WebKit.framework */; };
 		A0DFE1C0361F10E1E446CD0A /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AF665A6CADD2CF7983E0AD50 /* IOKit.framework */; };
@@ -49,6 +52,10 @@
 		7829A4BA210E2B0800B415AB /* juce_gui_basics */ = {isa = PBXFileReference; lastKnownFileType = folder; name = juce_gui_basics; path = "../../../../JUCE 2/modules/juce_gui_basics"; sourceTree = "<group>"; };
 		7829A4BB210E2B0800B415AB /* juce_gui_extra */ = {isa = PBXFileReference; lastKnownFileType = folder; name = juce_gui_extra; path = "../../../../JUCE 2/modules/juce_gui_extra"; sourceTree = "<group>"; };
 		7829A4BC210E2B0800B415AB /* juce_opengl */ = {isa = PBXFileReference; lastKnownFileType = folder; name = juce_opengl; path = "../../../../JUCE 2/modules/juce_opengl"; sourceTree = "<group>"; };
+		783170412119F040002131A5 /* CompenentControls.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = CompenentControls.cpp; path = ../../Source/CompenentControls.cpp; sourceTree = "<group>"; };
+		783170422119F040002131A5 /* CompenentControls.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CompenentControls.h; path = ../../Source/CompenentControls.h; sourceTree = "<group>"; };
+		78317044211A22EC002131A5 /* FactoryDefaultControls.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = FactoryDefaultControls.cpp; path = ../../Source/FactoryDefaultControls.cpp; sourceTree = "<group>"; };
+		78317045211A22EC002131A5 /* FactoryDefaultControls.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FactoryDefaultControls.h; path = ../../Source/FactoryDefaultControls.h; sourceTree = "<group>"; };
 		78C613FD20FCF38400FA541C /* ErrorList.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ErrorList.h; path = ../../Source/ErrorList.h; sourceTree = "<group>"; };
 		78C613FE20FCF38400FA541C /* LoadFile.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = LoadFile.cpp; path = ../../Source/LoadFile.cpp; sourceTree = "<group>"; };
 		78C613FF20FCF38400FA541C /* LoadFile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LoadFile.h; path = ../../Source/LoadFile.h; sourceTree = "<group>"; };
@@ -59,6 +66,8 @@
 		78CD295120FF920C00CF0241 /* Listener.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Listener.h; path = ../../Source/Listener.h; sourceTree = "<group>"; };
 		78E5203E210D7D850086A8BA /* BarsAndLines.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = BarsAndLines.cpp; path = ../../Source/BarsAndLines.cpp; sourceTree = "<group>"; };
 		78E5203F210D7D850086A8BA /* BarsAndLines.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BarsAndLines.h; path = ../../Source/BarsAndLines.h; sourceTree = "<group>"; };
+		78F63B4321196B2E00AF7832 /* HistogramsDraw.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = HistogramsDraw.cpp; path = ../../Source/HistogramsDraw.cpp; sourceTree = "<group>"; };
+		78F63B4421196B2E00AF7832 /* HistogramsDraw.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HistogramsDraw.h; path = ../../Source/HistogramsDraw.h; sourceTree = "<group>"; };
 		7DAE0162EF9A7EAF46BB718C /* AppConfig.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = AppConfig.h; path = ../../JuceLibraryCode/AppConfig.h; sourceTree = SOURCE_ROOT; };
 		823D35537081FFBA6F16E251 /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = System/Library/Frameworks/WebKit.framework; sourceTree = SDKROOT; };
 		851278B0FB595665D16DC3D5 /* include_juce_cryptography.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; name = include_juce_cryptography.mm; path = ../../JuceLibraryCode/include_juce_cryptography.mm; sourceTree = SOURCE_ROOT; };
@@ -132,6 +141,12 @@
 				78CD295120FF920C00CF0241 /* Listener.h */,
 				78E5203E210D7D850086A8BA /* BarsAndLines.cpp */,
 				78E5203F210D7D850086A8BA /* BarsAndLines.h */,
+				78F63B4321196B2E00AF7832 /* HistogramsDraw.cpp */,
+				78F63B4421196B2E00AF7832 /* HistogramsDraw.h */,
+				783170412119F040002131A5 /* CompenentControls.cpp */,
+				783170422119F040002131A5 /* CompenentControls.h */,
+				78317044211A22EC002131A5 /* FactoryDefaultControls.cpp */,
+				78317045211A22EC002131A5 /* FactoryDefaultControls.h */,
 			);
 			name = Source;
 			sourceTree = "<group>";
@@ -278,6 +293,7 @@
 				642879627A8D7E3558C38CB3 /* MainComponent.cpp in Sources */,
 				2B82A02A5923ED96CDF33BF0 /* Main.cpp in Sources */,
 				34328144D80FA6A07C616333 /* include_juce_core.mm in Sources */,
+				783170432119F040002131A5 /* CompenentControls.cpp in Sources */,
 				5CF4742BB568083B6BA8C858 /* include_juce_cryptography.mm in Sources */,
 				78C6140420FCF38400FA541C /* PharseRCPFileToDescriptors.cpp in Sources */,
 				78C6140320FCF38400FA541C /* LoadFile.cpp in Sources */,
@@ -287,8 +303,10 @@
 				907BAA66FC081A67994D76F9 /* include_juce_graphics.mm in Sources */,
 				C5666BD13CD890E1C5497047 /* include_juce_gui_basics.mm in Sources */,
 				78E52040210D7D850086A8BA /* BarsAndLines.cpp in Sources */,
+				78317046211A22EC002131A5 /* FactoryDefaultControls.cpp in Sources */,
 				A3DF488AA56279A71D07ACA5 /* include_juce_gui_extra.mm in Sources */,
 				6D8D0003AE52072DBDF2C7C6 /* include_juce_opengl.mm in Sources */,
+				78F63B4521196B2E00AF7832 /* HistogramsDraw.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -6,7 +6,7 @@
 //
 //
 
-#include "CompenentControls.h"
+#include "BaseComponentControl.h"
 #include "FactoryDefaultControls.h"
 
 #include "LoadFile.h"
@@ -14,10 +14,10 @@
 #include "HistogramsDraw.h"
 
 //==============================================================================================================
-std::shared_ptr<CompenentControls> CreateDefaultControls(const String& in_ControlName, MainComponent* in_StandardGUI)
+std::shared_ptr<BaseComponentControl> CreateDefaultControls(const String& in_ControlName, MainComponent* in_StandardGUI)
 //==============================================================================================================
 {
-    std::shared_ptr<CompenentControls> retVal = 0;
+    std::shared_ptr<BaseComponentControl> retVal = 0;
     
     if( in_ControlName == "ToolBar")
     {

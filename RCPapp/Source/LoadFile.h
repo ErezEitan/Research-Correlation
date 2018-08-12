@@ -5,7 +5,7 @@
 #include "../JuceLibraryCode/JuceHeader.h"
 #include "juce_core/system/juce_PlatformDefs.h"
 #include "Listener.h"
-#include "CompenentControls.h"
+#include "BaseComponentControl.h"
 
 
 enum DialogType
@@ -15,7 +15,7 @@ enum DialogType
 };
 
 //==============================================================================
-class ToolBar : public CompenentControls
+class ToolBar : public BaseComponentControl
 {
 public:
     ToolBar(MainComponent* in_mainComponent);

@@ -10,10 +10,10 @@
 #define __FactoryDefaultControls_h__
 
 #include "../JuceLibraryCode/JuceHeader.h"
-#include "CompenentControls.h"
+#include "BaseComponentControl.h"
 
 class MainComponent;
 
-std::shared_ptr<CompenentControls> CreateDefaultControls(const String& in_ControlName, MainComponent* in_StandardGUI);
+std::shared_ptr<BaseComponentControl> CreateDefaultControls(const String& in_ControlName, MainComponent* in_StandardGUI);
 
 #endif /* FactoryDefaultControls_h */

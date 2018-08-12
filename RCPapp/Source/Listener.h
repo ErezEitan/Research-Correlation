@@ -17,7 +17,7 @@ class ComponentCallbackListenerAbs : public ComponentListener
 public:
     ComponentCallbackListenerAbs() {;}
     virtual ~ComponentCallbackListenerAbs() {;}
-    virtual void Callback(const String in_msg) = 0;
+    virtual void Callback(const String in_msg, void* in_data = 0) = 0;
 };
 
 class Listener : public ComponentCallbackListenerAbs
@@ -26,7 +26,7 @@ public:
     Listener() {;}
     virtual ~Listener() {;}
     void AddListener(std::shared_ptr<ComponentCallbackListenerAbs> in_pListner) {m_pCallbackListener = in_pListner;}
-    virtual void Callback(const String in_msg) override;
+    virtual void Callback(const String in_msg, void* in_data = 0) override;
     
 private:
     std::shared_ptr<ComponentCallbackListenerAbs> m_pCallbackListener = nullptr;

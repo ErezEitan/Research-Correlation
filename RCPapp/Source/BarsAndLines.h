@@ -14,16 +14,20 @@
 
 #include "../JuceLibraryCode/JuceHeader.h"
 #include <stdio.h>
-#include "CompenentControls.h"
+#include "BaseComponentControl.h"
 #include "LoadFile.h"
 #include "PharseRCPFileToDescriptors.h"
 
 //==============================================================================
 /** This will be the source of our balls and can be dragged around. */
-class BarComponent : public CompenentControls
+class BarComponent : public BaseComponentControl
 {
 public:
-    BarComponent(MainComponent* in_mainComponent) : CompenentControls(in_mainComponent){}
+    BarComponent(MainComponent* in_mainComponent)
+    : BaseComponentControl(in_mainComponent)
+    {
+        m_controlName = "BarCompenent";
+    }
     ~BarComponent() {};
     
     void paint(Graphics& g) override
@@ -46,13 +50,6 @@ public:
         return m_barDescriptor;
     }
     
-    void resized() override
-    {
-        // Just set the limits of our constrainer so that we don't drag ourselves off the screen
-        m_constrainer.setMinimumOnscreenAmounts(getHeight(), getWidth(),
-                                                getHeight(), getWidth());
-    }
-    
     void mouseDown(const MouseEvent& e) override
     {
         // Prepares our dragger to drag this Component
@@ -65,26 +62,27 @@ public:
         
         m_barName = "Bar: " + std::to_string(m_barIndex);
     }
-    friend class MainComponent;
     
 private:
     int m_sizeOfBarInPixel = 0;
     int m_barIndex = -1;
     std::string m_barName;
     Rectangle<int> m_barRectangle;
-    ComponentBoundsConstrainer m_constrainer;
-    ComponentDragger dragger;
     BarDescriptorStruct m_barDescriptor;
     
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(BarComponent)
 };
 
 
-class BarAndLine  : public CompenentControls
+class BarAndLine  : public BaseComponentControl
 {
 public:
     //==============================================================================
-    BarAndLine(MainComponent* in_mainComponent) : CompenentControls(in_mainComponent){}
+    BarAndLine(MainComponent* in_mainComponent)
+    : BaseComponentControl(in_mainComponent)
+    {
+        m_controlName = "BarAndLine";
+    }
     ~BarAndLine(){};
     
     //==============================================================================
@@ -92,23 +90,25 @@ public:
     void resized() override;
     void mouseDrag(const MouseEvent& e) override;
     void mouseDown(const MouseEvent& e) override;
-    virtual void Callback(const String in_msg) override;
+    virtual void Callback(const String in_msg, void* /*in_data*/) override;
     
 private:
     //==============================================================================
     // Your private member variables go here...
     PharseRCPFileToDescriptors m_rcpDescriptors;
     std::vector<std::shared_ptr<BarComponent>> m_vBars;
-     Point<int> m_lastMouseLocation = {0,0};
+    Point<int> m_lastMouseLocation = {0,0};
+    
     Line<float> m_lineGraphHorizontal;
     Line<float> m_lineGraphVertical;
     int m_numOfBars = 0;
-    int m_barWidthInPixel = 0;
-    int m_barHightInPixel = 0;
+    float m_barWidthInPixel = 0.0f;
+    float m_barHightInPixel = 0.0f;
     
     // Members function
     void CalculateLinesDrawPoints();
     void CalculateAndSetBarsSize();
+    void SetHightAndWidthForBars();
     Rectangle<int> GetTheAreaLimiterFromBarsBeforeMe(const std::vector<int32_t>& in_vWhichBarBeforeMe);
     Rectangle<int> GetTheAreaLimiterFromBarsAfterMe(const std::vector<int32_t>& in_vWhichBarAfterMe);
     

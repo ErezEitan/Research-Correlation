@@ -9,7 +9,7 @@
 #include "Listener.h"
 
 //==============================================================================
-void Listener::Callback(const String in_msg)
+void Listener::Callback(const String in_msg, void* /*in_data*/)
 //==============================================================================
 {
     if (m_pCallbackListener)

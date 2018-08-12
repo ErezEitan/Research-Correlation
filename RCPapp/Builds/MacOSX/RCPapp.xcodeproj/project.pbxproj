@@ -12,7 +12,8 @@
 		5CF4742BB568083B6BA8C858 /* include_juce_cryptography.mm in Sources */ = {isa = PBXBuildFile; fileRef = 851278B0FB595665D16DC3D5 /* include_juce_cryptography.mm */; };
 		642879627A8D7E3558C38CB3 /* MainComponent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AD46A7EAEA5A6FC473542A2F /* MainComponent.cpp */; };
 		6D8D0003AE52072DBDF2C7C6 /* include_juce_opengl.mm in Sources */ = {isa = PBXBuildFile; fileRef = 269BBB5765658EC7E70B94A8 /* include_juce_opengl.mm */; };
-		783170432119F040002131A5 /* CompenentControls.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 783170412119F040002131A5 /* CompenentControls.cpp */; };
+		78180E0121208B0600495400 /* LinesAndSeperatorDrawFunction.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 78180DFF21208B0600495400 /* LinesAndSeperatorDrawFunction.cpp */; };
+		783170432119F040002131A5 /* BaseComponentControl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 783170412119F040002131A5 /* BaseComponentControl.cpp */; };
 		78317046211A22EC002131A5 /* FactoryDefaultControls.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 78317044211A22EC002131A5 /* FactoryDefaultControls.cpp */; };
 		78C6140320FCF38400FA541C /* LoadFile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 78C613FE20FCF38400FA541C /* LoadFile.cpp */; };
 		78C6140420FCF38400FA541C /* PharseRCPFileToDescriptors.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 78C6140020FCF38400FA541C /* PharseRCPFileToDescriptors.cpp */; };
@@ -44,6 +45,8 @@
 		6757D4B56101AFB91B575D4B /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		6D98B04F1A2D39F6BDE248D4 /* include_juce_data_structures.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; name = include_juce_data_structures.mm; path = ../../JuceLibraryCode/include_juce_data_structures.mm; sourceTree = SOURCE_ROOT; };
 		747C23974720B4485A8B09E9 /* include_juce_core.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; name = include_juce_core.mm; path = ../../JuceLibraryCode/include_juce_core.mm; sourceTree = SOURCE_ROOT; };
+		78180DFF21208B0600495400 /* LinesAndSeperatorDrawFunction.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = LinesAndSeperatorDrawFunction.cpp; path = ../../Source/LinesAndSeperatorDrawFunction.cpp; sourceTree = "<group>"; };
+		78180E0021208B0600495400 /* LinesAndSeperatorDrawFunction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LinesAndSeperatorDrawFunction.h; path = ../../Source/LinesAndSeperatorDrawFunction.h; sourceTree = "<group>"; };
 		7829A4B5210E2B0800B415AB /* juce_core */ = {isa = PBXFileReference; lastKnownFileType = folder; name = juce_core; path = "../../../../JUCE 2/modules/juce_core"; sourceTree = "<group>"; };
 		7829A4B6210E2B0800B415AB /* juce_cryptography */ = {isa = PBXFileReference; lastKnownFileType = folder; name = juce_cryptography; path = "../../../../JUCE 2/modules/juce_cryptography"; sourceTree = "<group>"; };
 		7829A4B7210E2B0800B415AB /* juce_data_structures */ = {isa = PBXFileReference; lastKnownFileType = folder; name = juce_data_structures; path = "../../../../JUCE 2/modules/juce_data_structures"; sourceTree = "<group>"; };
@@ -52,8 +55,8 @@
 		7829A4BA210E2B0800B415AB /* juce_gui_basics */ = {isa = PBXFileReference; lastKnownFileType = folder; name = juce_gui_basics; path = "../../../../JUCE 2/modules/juce_gui_basics"; sourceTree = "<group>"; };
 		7829A4BB210E2B0800B415AB /* juce_gui_extra */ = {isa = PBXFileReference; lastKnownFileType = folder; name = juce_gui_extra; path = "../../../../JUCE 2/modules/juce_gui_extra"; sourceTree = "<group>"; };
 		7829A4BC210E2B0800B415AB /* juce_opengl */ = {isa = PBXFileReference; lastKnownFileType = folder; name = juce_opengl; path = "../../../../JUCE 2/modules/juce_opengl"; sourceTree = "<group>"; };
-		783170412119F040002131A5 /* CompenentControls.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = CompenentControls.cpp; path = ../../Source/CompenentControls.cpp; sourceTree = "<group>"; };
-		783170422119F040002131A5 /* CompenentControls.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CompenentControls.h; path = ../../Source/CompenentControls.h; sourceTree = "<group>"; };
+		783170412119F040002131A5 /* BaseComponentControl.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = BaseComponentControl.cpp; path = ../../Source/BaseComponentControl.cpp; sourceTree = "<group>"; };
+		783170422119F040002131A5 /* BaseComponentControl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BaseComponentControl.h; path = ../../Source/BaseComponentControl.h; sourceTree = "<group>"; };
 		78317044211A22EC002131A5 /* FactoryDefaultControls.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = FactoryDefaultControls.cpp; path = ../../Source/FactoryDefaultControls.cpp; sourceTree = "<group>"; };
 		78317045211A22EC002131A5 /* FactoryDefaultControls.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FactoryDefaultControls.h; path = ../../Source/FactoryDefaultControls.h; sourceTree = "<group>"; };
 		78C613FD20FCF38400FA541C /* ErrorList.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ErrorList.h; path = ../../Source/ErrorList.h; sourceTree = "<group>"; };
@@ -143,10 +146,12 @@
 				78E5203F210D7D850086A8BA /* BarsAndLines.h */,
 				78F63B4321196B2E00AF7832 /* HistogramsDraw.cpp */,
 				78F63B4421196B2E00AF7832 /* HistogramsDraw.h */,
-				783170412119F040002131A5 /* CompenentControls.cpp */,
-				783170422119F040002131A5 /* CompenentControls.h */,
+				783170412119F040002131A5 /* BaseComponentControl.cpp */,
+				783170422119F040002131A5 /* BaseComponentControl.h */,
 				78317044211A22EC002131A5 /* FactoryDefaultControls.cpp */,
 				78317045211A22EC002131A5 /* FactoryDefaultControls.h */,
+				78180DFF21208B0600495400 /* LinesAndSeperatorDrawFunction.cpp */,
+				78180E0021208B0600495400 /* LinesAndSeperatorDrawFunction.h */,
 			);
 			name = Source;
 			sourceTree = "<group>";
@@ -293,7 +298,8 @@
 				642879627A8D7E3558C38CB3 /* MainComponent.cpp in Sources */,
 				2B82A02A5923ED96CDF33BF0 /* Main.cpp in Sources */,
 				34328144D80FA6A07C616333 /* include_juce_core.mm in Sources */,
-				783170432119F040002131A5 /* CompenentControls.cpp in Sources */,
+				78180E0121208B0600495400 /* LinesAndSeperatorDrawFunction.cpp in Sources */,
+				783170432119F040002131A5 /* BaseComponentControl.cpp in Sources */,
 				5CF4742BB568083B6BA8C858 /* include_juce_cryptography.mm in Sources */,
 				78C6140420FCF38400FA541C /* PharseRCPFileToDescriptors.cpp in Sources */,
 				78C6140320FCF38400FA541C /* LoadFile.cpp in Sources */,

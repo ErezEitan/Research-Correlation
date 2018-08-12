@@ -2,9 +2,11 @@
 
 //================
 ToolBar::ToolBar(MainComponent* in_mainComponent)
-    : CompenentControls(in_mainComponent)
+    : BaseComponentControl(in_mainComponent)
 //================
 {
+    m_controlName = "ToolBar";
+    
 	setOpaque(true);
 	StringArray windowNames{ "'Load' File Browser", "'Save' File Browser" };
 
@@ -18,8 +20,6 @@ ToolBar::ToolBar(MainComponent* in_mainComponent)
 		auto index = windowNames.indexOf(windowName);
 		newButton->onClick = [this, index, newButton] { ShowWindow(*newButton, static_cast<DialogType> (index)); };
 	}
-
-	setSize(620, 50);
 }
 
 //===============================

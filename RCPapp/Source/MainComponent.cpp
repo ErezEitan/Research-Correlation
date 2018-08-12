@@ -24,6 +24,8 @@ MainComponent::MainComponent()
     {
         addAndMakeVisible(*controls);
     }
+    
+    resized();
 }
 
 //==============================================================================

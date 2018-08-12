@@ -14,23 +14,31 @@
 
 #include <stdio.h>
 #include "../JuceLibraryCode/JuceHeader.h"
+#include "BaseComponentControl.h"
 
-
-class HistogramsDraw  : public Component
+class HistogramsDraw  : public BaseComponentControl
 {
 public:
     //==============================================================================
-    HistogramsDraw();
+    HistogramsDraw(MainComponent* in_mainComponent)
+    : BaseComponentControl(in_mainComponent)
+    {
+        m_controlName = "HistogramsDraw";
+    }
     ~HistogramsDraw();
     
     //==============================================================================
     void paint (Graphics&) override;
     void resized() override;
-    
+  
 private:
     //==============================================================================
     // Your private member variables go here...
-
+    Line<float> m_lineGraphHorizontal;
+    Line<float> m_lineGraphVertical;
+    // private function
+    void CalculateLinesDrawPoints();
+    
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (HistogramsDraw)
 };
 

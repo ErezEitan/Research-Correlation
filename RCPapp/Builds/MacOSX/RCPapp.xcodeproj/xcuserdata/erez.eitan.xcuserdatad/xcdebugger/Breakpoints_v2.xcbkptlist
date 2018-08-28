@@ -25,28 +25,30 @@
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "../../Source/BarsAndLines.cpp"
-            timestampString = "555364692.7986161"
+            filePath = "../../Source/LinesAndSeperatorDrawFunction.cpp"
+            timestampString = "555841955.223614"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "41"
-            endingLineNumber = "41"
-            landmarkName = "BarAndLine::paint (Graphics&amp; g)"
+            startingLineNumber = "47"
+            endingLineNumber = "47"
+            landmarkName = "LinesDraw::paint (Graphics&amp; g)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            shouldBeEnabled = "Yes"
+            shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "../../Source/HistogramsDraw.cpp"
-            timestampString = "555400544.68712"
+            filePath = "../../Source/LinesAndSeperatorDrawFunction.cpp"
+            timestampString = "555841959.40148"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "14"
-            endingLineNumber = "14">
+            startingLineNumber = "59"
+            endingLineNumber = "59"
+            landmarkName = "LinesDraw::resized()"
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>

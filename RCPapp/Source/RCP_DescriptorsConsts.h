@@ -3,6 +3,14 @@
 
 #include "../JuceLibraryCode/JuceHeader.h"
 
+enum HistogramColor
+{
+    eRed,
+    eBlue,
+    eGreen,
+    eYellow,
+    eNumberOfHistogramColors
+};
 enum eRCP_Descriptor
 {
 	eNumOfBars,

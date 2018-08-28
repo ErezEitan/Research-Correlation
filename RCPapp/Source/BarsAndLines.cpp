@@ -11,45 +11,39 @@
 
 //const int kOffsetReducedFromMainArea = 30;
 
+//==============================================================================
+BarAndLine::BarAndLine(MainComponent* in_mainComponent)
+    : BaseComponentControl(in_mainComponent)
+    , m_lineAxisX(in_mainComponent)
+    , m_lineAxisY(in_mainComponent)
+    , m_lineOfHistogramAxisX(in_mainComponent)
+    , m_lineOfHistogramAxisY(in_mainComponent)
+//==============================================================================
+{
+    m_controlName = "BarAndLine";
+    
+    m_lineAxisX.SetDirection(LineDraw::eHorizontal);
+    m_lineAxisY.SetDirection(LineDraw::eVertical);
+ 
+    m_lineOfHistogramAxisX.SetDirection(LineDraw::eHorizontal);
+    m_lineOfHistogramAxisX.SetColor(Colours::red);
+    m_lineOfHistogramAxisY.SetDirection(LineDraw::eVertical);
+    m_lineOfHistogramAxisY.SetColor(Colours::red);
+    
+    for (int i = 0; i < eNumberOfHistogramColors; ++i)
+    {
+        m_vShowHistogramOrBar.push_back(std::make_shared<ArrowButtonForHistogramView>(m_pMainCompenent, 0.0f, Colours::red));
+        m_vShowHistogramOrBar[i]->addMouseListener(this, false);
+    }
+}
 
 //==============================================================================
 void BarAndLine::paint (Graphics& g)
 //==============================================================================
 {
-    if(m_rcpDescriptors.IsFileOpen())
-    {
-        // (Our component is opaque, so we must completely fill the background with a solid colour)
-        g.fillAll (getLookAndFeel().findColour (ResizableWindow::backgroundColourId));
-        g.setColour (Colours::white);
-        
-        g.drawLine(m_lineGraphHorizontal);
-        g.drawLine(m_lineGraphVertical);
 
-        Rectangle<int> area;
-        
-        for (int i = 0; i < m_numOfBars; ++i)
-        {
-            Line<float> seperateLinesVertical(i * m_barWidthInPixel + 30, m_lineGraphVertical.getEnd().getY() + 10, i * m_barWidthInPixel + 30, m_lineGraphVertical.getEnd().getY() - 10);
-            g.drawLine(seperateLinesVertical);
-            area.setBounds(seperateLinesVertical.getStart().getX(), seperateLinesVertical.getEnd().getY() + 10, 20, 20);
-            g.setFont(10.0f);
-            g.drawFittedText(std::to_string(i).c_str(), area, Justification::centredLeft, 5.f);
-            
-            Line<float> lineBarsHorizontal(15, i * m_barHightInPixel + 30, 40,i * m_barHightInPixel + 30);
-            g.drawLine(lineBarsHorizontal);
-            area.setBounds(lineBarsHorizontal.getStart().getX(), lineBarsHorizontal.getEndY(), 20, 20);
-            g.setFont(10.0f);
-            g.drawFittedText(std::to_string(i).c_str(), area, Justification::centredLeft, 5.f);
-        }
-    }
 }
-/*
-//==============================================================================
-Line<float>& BarAndLine::CalculateSeperetorsVerticalsLines (Graphics& g)
-//==============================================================================
-{
-}
-*/
+
 //==============================================================================
 void BarAndLine::resized()
 //==============================================================================
@@ -61,7 +55,19 @@ void BarAndLine::resized()
     if(m_rcpDescriptors.IsFileOpen())
     {
         CalculateLinesDrawPoints();
+        CalculateHistogramLinesDrawPoints();
         SetHightAndWidthForBars();
+        CalculateAndHistograms();
+        
+        Rectangle<float> area = getLocalBounds().toFloat();
+        area.reduce(15.0f, 0.0f);
+        float reduce = (area.getHeight() * 0.5f) * 0.25f;
+        for(int i = 0; i < eNumberOfHistogramColors; ++i)
+        {
+            area.setBottom(area.getBottom() - reduce - (i * reduce));
+            m_vShowHistogramOrBar[i]->setBounds(area.getX(), area.getBottom() - 15.0f, 20.0f, 20.0f);
+        }
+        
         repaint();
     }
 }
@@ -71,19 +77,49 @@ void BarAndLine::CalculateLinesDrawPoints()
 //==============================================================================
 {
    
-    Rectangle<int> area = getLocalBounds();
-    area.reduce(30, 30);
+    m_numOfBars = m_rcpDescriptors.GetRcpDescriptor().m_numOfBars;
     
-    m_lineGraphHorizontal.setStart(area.getTopLeft().x, area.getTopLeft().y);
-    m_lineGraphHorizontal.setEnd(area.getTopLeft().x, area.getBottomLeft().y);
+    Rectangle<float> area = getLocalBounds().toFloat();
+    area.reduce(15.0f, 0.0f);
+    float reduce = (area.getHeight() * 0.5f);
+    area.setBottom(area.getBottom() - reduce);
     
-    m_lineGraphVertical.setStart(area.getBottomLeft().x, area.getBottomLeft().y);
-    m_lineGraphVertical.setEnd(area.getBottomRight().x, area.getBottomLeft().y);
+    Rectangle<float> areaLineDrawHorizontal(area.getX(), area.getBottom() - 15.0f, area.getWidth(), 30.0f);
+    m_lineAxisX.setBounds(areaLineDrawHorizontal.toNearestInt());
+    m_lineAxisX.SetNumberOfSepertors(m_numOfBars);
+    m_lineAxisX.resized();
+    
+    Rectangle<float> areaLineDrawVertical(area.getX(), area.getTopLeft().getY(), 30.0f, area.getHeight());
+    m_lineAxisY.setBounds(areaLineDrawVertical.toNearestInt());
+    m_lineAxisY.SetNumberOfSepertors(m_numOfBars);
+    m_lineAxisY.resized();
+    
+    m_barWidthInPixel = areaLineDrawHorizontal.getWidth() / m_numOfBars;
+    m_barHightInPixel = areaLineDrawVertical.getHeight() / m_numOfBars;    
+}
+
+
+//==============================================================================
+void BarAndLine::CalculateHistogramLinesDrawPoints()
+//==============================================================================
+{
     
     m_numOfBars = m_rcpDescriptors.GetRcpDescriptor().m_numOfBars;
-    m_barWidthInPixel = m_lineGraphVertical.getLength() / m_numOfBars;
-    m_barHightInPixel = m_lineGraphHorizontal.getLength() / m_numOfBars;
     
+    Rectangle<float> area = getLocalBounds().toFloat();
+    area.reduce(15.0f, 15.0f);
+    area.setBottom(area.getBottom());
+    area.setTop(m_lineAxisX.getBottom());
+    
+    Rectangle<float> areaLineDrawHorizontal(area.getX(), area.getBottom() - 15.0f, area.getWidth(), 30.0f);
+    m_lineOfHistogramAxisX.setBounds(areaLineDrawHorizontal.toNearestInt());
+    m_lineOfHistogramAxisX.SetNumberOfSepertors(m_numOfBars);
+    m_lineOfHistogramAxisX.resized();
+    
+    Rectangle<float> areaLineDrawVertical(area.getX(), m_lineAxisY.getBottom() + 15.0f, 30.0f, area.getHeight());
+    m_lineOfHistogramAxisY.setBounds(areaLineDrawVertical.toNearestInt());
+    m_lineOfHistogramAxisY.SetNumberOfSepertors(m_numOfBars);
+    m_lineOfHistogramAxisY.resized();
 }
 
 //==============================================================================
@@ -92,8 +128,26 @@ void BarAndLine::Callback(const String in_msg, void* /*in_data*/)
 {
     if(UTNoError(m_rcpDescriptors.OpenFilePathAndPharse(in_msg)))
     {
+        addAndMakeVisible(m_lineAxisX);
+        addAndMakeVisible(m_lineAxisY);
+        addAndMakeVisible(m_lineOfHistogramAxisX);
+        addAndMakeVisible(m_lineOfHistogramAxisY);
+  
+        
+        Rectangle<float> area = getLocalBounds().toFloat();
+        area.reduce(15.0f, 0.0f);
+        float reduce = (area.getHeight() * 0.5f) * 0.25f;
+        for(int i = 0; i < eNumberOfHistogramColors; ++i)
+        {
+            area.setBottom(area.getBottom() - reduce - (i * reduce));
+            m_vShowHistogramOrBar[i]->setBounds(area.getX(), area.getBottom() - 15.0f, 20.0f, 20.0f);
+            addAndMakeVisible(*m_vShowHistogramOrBar[i]);
+        }
+ 
         CalculateLinesDrawPoints();
+        CalculateHistogramLinesDrawPoints();
         CalculateAndSetBarsSize();
+        CalculateAndHistograms();
         repaint();
     }
 }
@@ -116,22 +170,12 @@ void BarAndLine::CalculateAndSetBarsSize()
             m_vBars[i]->addMouseListener(this, false);
             addAndMakeVisible(*m_vBars[i]);
             
-            Rectangle<int> barBounds(30, (i * m_barHightInPixel) + 30, m_barWidthInPixel * vBarDescriptor[i]->m_barLength, m_barHightInPixel);
-            m_vBars[i]->setBounds(barBounds);
+            Rectangle<float> barBounds(m_lineAxisY.getX() * 2.0f, (i * m_barHightInPixel), m_barWidthInPixel * vBarDescriptor[i]->m_barLength, m_barHightInPixel);
+            m_vBars[i]->setBounds(barBounds.toNearestInt());
             m_vBars[i]->SetBarDescriptor(*vBarDescriptor[i]);
         }
         
-        for (int cur = 0; cur < m_vBars.size(); ++cur)
-        {
-            for (int j = 0; j < vBarDescriptor[cur]->m_vWhichBarAfterMe.size(); ++j)
-            {
-                int barAfterMe = vBarDescriptor[cur]->m_vWhichBarAfterMe[j];
-                int newAxisX = m_vBars[cur]->getBounds().getX() + vBarDescriptor[cur]->m_barLength * m_barWidthInPixel;
-                Rectangle<int> newBarBounds = m_vBars[barAfterMe]->getBounds();
-                newBarBounds.setX(newAxisX);
-                m_vBars[barAfterMe]->setBounds(newBarBounds);
-            }
-        }
+        SetHightAndWidthForBars();
     }
 }
 
@@ -152,15 +196,15 @@ void BarAndLine::SetHightAndWidthForBars()
             for (int cur = 0; cur < m_vBars.size(); ++cur)
             {
                 Rectangle<int> curBarBounds = m_vBars[cur]->getBounds();
-                curBarBounds.setY((cur * m_barHightInPixel) + 30);
+                curBarBounds.setY((cur * m_barHightInPixel));
                 m_vBars[cur]->setBounds(curBarBounds);
                 for (int j = 0; j < m_vBars[cur]->GetBarDescriptor().m_vWhichBarAfterMe.size(); ++j)
                 {
                     int barAfterMe = m_vBars[cur]->GetBarDescriptor().m_vWhichBarAfterMe[j];
-                    int newAxisX = m_vBars[cur]->getBounds().getX() + m_vBars[cur]->GetBarDescriptor().m_barLength * m_barWidthInPixel;
-                    Rectangle<int> newBarBounds = m_vBars[barAfterMe]->getBounds();
+                    float newAxisX = m_vBars[cur]->getBounds().getX() + m_vBars[cur]->GetBarDescriptor().m_barLength * m_barWidthInPixel;
+                    Rectangle<float> newBarBounds = m_vBars[barAfterMe]->getBounds().toFloat();
                     newBarBounds.setX(newAxisX);
-                    m_vBars[barAfterMe]->setBounds(newBarBounds);
+                    m_vBars[barAfterMe]->setBounds(newBarBounds.toNearestInt());
                 }
             }
         }
@@ -182,6 +226,10 @@ void BarAndLine::mouseDown(const MouseEvent& e)
 void BarAndLine::mouseDrag(const MouseEvent& e)
 //==============================================================================
 {
+    Rectangle<int> area;
+    Point<int> curPosition = getMouseXYRelative();
+    Point<int> deltaDrag = (m_lastMouseLocation - curPosition);
+    
     // Moves this Component according to the mouse drag event and applies our constraints to it
     if(e.eventComponent != this)
     {
@@ -189,10 +237,8 @@ void BarAndLine::mouseDrag(const MouseEvent& e)
         
         if (nullptr != pBarComponent)
         {
-            Rectangle<int> area = pBarComponent->getBounds();
-            Point<int> curPosition = getMouseXYRelative();
-            Point<int> deltaDrag = (m_lastMouseLocation - curPosition);
-            
+            area = pBarComponent->getBounds();
+       
             if (0 != deltaDrag.getX())
             {
                 BarDescriptorStruct barDescriptor = pBarComponent->GetBarDescriptor();
@@ -206,9 +252,24 @@ void BarAndLine::mouseDrag(const MouseEvent& e)
                 }
             }
         }
-
-        m_lastMouseLocation = getMouseXYRelative();
     }
+    
+    for (int i = 0; i < eNumberOfHistogramColors; ++i)
+    {
+        if(e.eventComponent == &(*m_vShowHistogramOrBar[i]))
+        {
+            area = e.eventComponent->getBounds();
+            Rectangle<int> drawArea = getLocalBounds();
+            drawArea.reduce(10, 10);
+            Rectangle<int> newArea(area.getX(), area.getY() - deltaDrag.getY(), area.getWidth(), area.getHeight());
+            if (newArea.getY() < drawArea.getHeight() && newArea.getY() > drawArea.getY())
+            {
+                m_arrowDistance = area.getY() - deltaDrag.getY();
+                e.eventComponent->setBounds(newArea.getX(), m_arrowDistance, newArea.getWidth(), newArea.getHeight());
+            }
+        }
+    }
+    m_lastMouseLocation = getMouseXYRelative();
 }
 
 //=================================================================================================
@@ -243,4 +304,31 @@ Rectangle<int> BarAndLine::GetTheAreaLimiterFromBarsAfterMe(const std::vector<in
     }
     
     return areaRetVal;
+}
+
+//==============================================================================
+void BarAndLine::CalculateAndHistograms()
+//==============================================================================
+{
+    m_vHistogram.clear();
+    
+    if (0 != m_numOfBars)
+    {
+        m_vHistogram.resize(m_numOfBars);
+        auto& vBarDescriptor = m_rcpDescriptors.GetBarDescriptor();
+        
+        for (int i = 0; i < m_vBars.size(); ++i)
+        {
+            m_vHistogram[i] = std::make_shared<HistogramsDraw>(m_pMainCompenent);
+            addAndMakeVisible(*m_vHistogram[i]);
+            int redWight = vBarDescriptor[i]->m_vHistogramWeight[eRed];
+
+            Rectangle<float> histogramBounds;
+            histogramBounds.setTop((m_lineOfHistogramAxisX.getBounds().getY() + m_lineOfHistogramAxisX.getHeight() / 2) - redWight);
+            histogramBounds.setHeight(redWight);
+            histogramBounds.setX((m_lineOfHistogramAxisX.getX() + m_lineOfHistogramAxisY.getWidth() / 2) + (i * m_barWidthInPixel));
+            histogramBounds.setWidth(m_barWidthInPixel);
+            m_vHistogram[i]->setBounds(histogramBounds.toNearestInt());
+        }
+    }
 }

@@ -25,20 +25,16 @@ public:
     {
         m_controlName = "HistogramsDraw";
     }
-    ~HistogramsDraw();
+    ~HistogramsDraw(){;}
     
     //==============================================================================
     void paint (Graphics&) override;
     void resized() override;
-  
+    
 private:
     //==============================================================================
     // Your private member variables go here...
-    Line<float> m_lineGraphHorizontal;
-    Line<float> m_lineGraphVertical;
-    // private function
-    void CalculateLinesDrawPoints();
-    
+
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (HistogramsDraw)
 };
 

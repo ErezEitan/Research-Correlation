@@ -17,6 +17,9 @@
 #include "BaseComponentControl.h"
 #include "LoadFile.h"
 #include "PharseRCPFileToDescriptors.h"
+#include "LinesAndSeperator.h"
+#include "HistogramsDraw.h"
+#include "ArrowButtonForHistogramView.h"
 
 //==============================================================================
 /** This will be the source of our balls and can be dragged around. */
@@ -50,12 +53,6 @@ public:
         return m_barDescriptor;
     }
     
-    void mouseDown(const MouseEvent& e) override
-    {
-        // Prepares our dragger to drag this Component
-        //dragger.startDraggingComponent(this, e);
-    }
-    
     void SetBarIndex(const int in_index)
     {
         m_barIndex = in_index;
@@ -78,11 +75,7 @@ class BarAndLine  : public BaseComponentControl
 {
 public:
     //==============================================================================
-    BarAndLine(MainComponent* in_mainComponent)
-    : BaseComponentControl(in_mainComponent)
-    {
-        m_controlName = "BarAndLine";
-    }
+    BarAndLine(MainComponent* in_mainComponent);
     ~BarAndLine(){};
     
     //==============================================================================
@@ -97,20 +90,31 @@ private:
     // Your private member variables go here...
     PharseRCPFileToDescriptors m_rcpDescriptors;
     std::vector<std::shared_ptr<BarComponent>> m_vBars;
-    Point<int> m_lastMouseLocation = {0,0};
+    LinesDraw m_lineAxisX;
+    LinesDraw m_lineAxisY;
     
-    Line<float> m_lineGraphHorizontal;
-    Line<float> m_lineGraphVertical;
     int m_numOfBars = 0;
     float m_barWidthInPixel = 0.0f;
     float m_barHightInPixel = 0.0f;
     
+    LinesDraw m_lineOfHistogramAxisX;
+    LinesDraw m_lineOfHistogramAxisY;
+    
     // Members function
     void CalculateLinesDrawPoints();
+    void CalculateHistogramLinesDrawPoints();
     void CalculateAndSetBarsSize();
     void SetHightAndWidthForBars();
     Rectangle<int> GetTheAreaLimiterFromBarsBeforeMe(const std::vector<int32_t>& in_vWhichBarBeforeMe);
     Rectangle<int> GetTheAreaLimiterFromBarsAfterMe(const std::vector<int32_t>& in_vWhichBarAfterMe);
+    
+    void CalculateAndHistograms();
+    std::vector<std::shared_ptr<HistogramsDraw>> m_vHistogram;
+ 
+    std::vector<std::shared_ptr<ArrowButtonForHistogramView>> m_vShowHistogramOrBar;
+    float m_arrowDistance = 0;
+    
+    Point<int> m_lastMouseLocation = {0,0};
     
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (BarAndLine)
 };

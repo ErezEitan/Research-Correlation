@@ -3,6 +3,7 @@
 
 #include "../JuceLibraryCode/JuceHeader.h"
 
+
 enum HistogramColor
 {
     eRed,
@@ -11,6 +12,14 @@ enum HistogramColor
     eYellow,
     eNumberOfHistogramColors
 };
+
+const Colour ColorsForHistograms[eNumberOfHistogramColors] = {
+    Colours::red,
+    Colours::blue,
+    Colours::green,
+    Colours::yellow
+};
+
 enum eRCP_Descriptor
 {
 	eNumOfBars,

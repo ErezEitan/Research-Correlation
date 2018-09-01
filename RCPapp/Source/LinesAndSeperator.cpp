@@ -15,7 +15,6 @@ void LinesDraw::CalculateLinesDrawPoints()
      m_vSeperetorsPath.clear();
     if (m_numberOfSepertors != m_vSeperetorsPath.size())
     {
-       
         m_vSeperetorsPath.resize(m_numberOfSepertors);
     }
     

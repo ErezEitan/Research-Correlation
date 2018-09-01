@@ -74,45 +74,52 @@ private:
 class BarAndLine  : public BaseComponentControl
 {
 public:
-    //==============================================================================
     BarAndLine(MainComponent* in_mainComponent);
     ~BarAndLine(){};
     
-    //==============================================================================
     void paint (Graphics&) override;
     void resized() override;
     void mouseDrag(const MouseEvent& e) override;
     void mouseDown(const MouseEvent& e) override;
     virtual void Callback(const String in_msg, void* /*in_data*/) override;
     
+protected:
+    void InitBarsDrawArea();
+    void InitBars();
+    void InitHistogramsLines();
+    void InitHistogramsWight();
+    void InitHistogramsShowArrows();
+    
 private:
-    //==============================================================================
     // Your private member variables go here...
-    PharseRCPFileToDescriptors m_rcpDescriptors;
-    std::vector<std::shared_ptr<BarComponent>> m_vBars;
-    LinesDraw m_lineAxisX;
-    LinesDraw m_lineAxisY;
-    
-    int m_numOfBars = 0;
-    float m_barWidthInPixel = 0.0f;
-    float m_barHightInPixel = 0.0f;
-    
-    LinesDraw m_lineOfHistogramAxisX;
-    LinesDraw m_lineOfHistogramAxisY;
     
     // Members function
+    void CalculateOneBarPixel();
     void CalculateLinesDrawPoints();
     void CalculateHistogramLinesDrawPoints();
-    void CalculateAndSetBarsSize();
     void SetHightAndWidthForBars();
+    void CalculateHistograms();
+    void CalculateShowHistogramArrow();
+    
     Rectangle<int> GetTheAreaLimiterFromBarsBeforeMe(const std::vector<int32_t>& in_vWhichBarBeforeMe);
     Rectangle<int> GetTheAreaLimiterFromBarsAfterMe(const std::vector<int32_t>& in_vWhichBarAfterMe);
     
-    void CalculateAndHistograms();
-    std::vector<std::shared_ptr<HistogramsDraw>> m_vHistogram;
- 
+    PharseRCPFileToDescriptors m_rcpDescriptors;
+
+    LinesDraw m_lineAxisX;
+    LinesDraw m_lineAxisY;
+    
+    std::vector<std::shared_ptr<BarComponent>> m_vBars;
+    std::vector<std::vector<std::shared_ptr<HistogramsDraw>>> m_vHistogram;
     std::vector<std::shared_ptr<ArrowButtonForHistogramView>> m_vShowHistogramOrBar;
+    std::vector<std::shared_ptr<LinesDraw>> m_vLineOfHistogramAxisX;
+    std::vector<std::shared_ptr<LinesDraw>> m_vLineOfHistogramAxisY;
+    std::vector<Path> m_vborderPath;
+    int m_numOfBars = 0;
+    float m_barWidthInPixel = 0.0f;
+    float m_barHightInPixel = 0.0f;
     float m_arrowDistance = 0;
+    Rectangle<float> m_areaForBars;
     
     Point<int> m_lastMouseLocation = {0,0};
     

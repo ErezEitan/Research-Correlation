@@ -20,13 +20,13 @@ public:
 
 	UTErr OpenFilePathAndPharse(const String& in_string);
 	std::vector<std::shared_ptr<BarDescriptorStruct>>& GetBarDescriptor() { return m_vBarDescriptor; }
-	RCPHeaderDescriptor& GetRcpDescriptor() { return m_rcpDescriptor; }
+	RCPHeaderDescriptor& GetRcpHeaderDescriptor() { return m_rcpHeaderDescriptor; }
     bool IsFileOpen() {return m_bIsFileOpen; }
     
 private:
 	// Private Members
     bool m_bIsFileOpen = false;
-    RCPHeaderDescriptor m_rcpDescriptor;
+    RCPHeaderDescriptor m_rcpHeaderDescriptor;
 	std::vector<std::shared_ptr<BarDescriptorStruct>> m_vBarDescriptor;
 
 	// Private Functions

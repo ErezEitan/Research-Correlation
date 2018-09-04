@@ -65,7 +65,14 @@ void LinesDraw::paint (Graphics& g)
     g.setColour (m_color);
     g.strokePath (m_lineAndSeperetorsPath, PathStrokeType (2.0f));
  
-    for (int i = 0; i < m_numberOfSepertors && !m_vSeperetorsPath.empty(); ++i)
+    int counter = 0;
+    int beginNextStep = 1;
+    if (m_bCountBackword)
+    {
+        beginNextStep = -1;
+        counter = m_numberOfSepertors - 1;
+    }
+    for (int i = 0; i < m_numberOfSepertors && !m_vSeperetorsPath.empty(); ++i, counter = counter + beginNextStep)
     {
         g.strokePath (m_vSeperetorsPath[i], PathStrokeType (1.0f));
         g.setFont(10.0f);
@@ -76,7 +83,7 @@ void LinesDraw::paint (Graphics& g)
         {
             fontArea.setY(m_lineAndSeperetorsPath.getBounds().getY() + m_lineAndSeperetorsPath.getBounds().getHeight());
         }
-        g.drawFittedText(std::to_string(i).c_str(), fontArea.toNearestInt(), Justification::centredBottom, 5.f);
+        g.drawFittedText(std::to_string(counter).c_str(), fontArea.toNearestInt(), Justification::centredBottom, 5.f);
     }
 }
 

@@ -95,23 +95,24 @@ private:
     
     // Members function
     void CalculateOneBarPixel();
+    void CalculateBarsDrawArea();
     void CalculateLinesDrawPoints();
     void CalculateHistogramLinesDrawPoints();
     void SetHightAndWidthForBars();
     void CalculateHistograms();
     void CalculateShowHistogramArrow();
     
-    Rectangle<int> GetTheAreaLimiterFromBarsBeforeMe(const std::vector<int32_t>& in_vWhichBarBeforeMe);
-    Rectangle<int> GetTheAreaLimiterFromBarsAfterMe(const std::vector<int32_t>& in_vWhichBarAfterMe);
+    Rectangle<float> GetTheAreaLimiterFromBarsBeforeMe(const std::vector<int32_t>& in_vWhichBarBeforeMe);
+    Rectangle<float> GetTheAreaLimiterFromBarsAfterMe(const std::vector<int32_t>& in_vWhichBarAfterMe);
     
     PharseRCPFileToDescriptors m_rcpDescriptors;
 
     LinesDraw m_lineAxisX;
     LinesDraw m_lineAxisY;
+    std::shared_ptr<ArrowButtonForHistogramView> m_showHistogramOrBar;
     
     std::vector<std::shared_ptr<BarComponent>> m_vBars;
     std::vector<std::vector<std::shared_ptr<HistogramsDraw>>> m_vHistogram;
-    std::vector<std::shared_ptr<ArrowButtonForHistogramView>> m_vShowHistogramOrBar;
     std::vector<std::shared_ptr<LinesDraw>> m_vLineOfHistogramAxisX;
     std::vector<std::shared_ptr<LinesDraw>> m_vLineOfHistogramAxisY;
     std::vector<Path> m_vborderPath;
@@ -120,6 +121,9 @@ private:
     float m_barHightInPixel = 0.0f;
     float m_arrowDistance = 0;
     Rectangle<float> m_areaForBars;
+    Rectangle<float> m_areaForHistograms;
+
+    float m_factor = 0.0f;
     
     Point<int> m_lastMouseLocation = {0,0};
     

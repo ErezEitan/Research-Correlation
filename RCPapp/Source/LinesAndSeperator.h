@@ -34,6 +34,8 @@ public:
     void SetNumberOfSepertors(const int in_numberOfSepertors) {m_numberOfSepertors = in_numberOfSepertors;}
     void CalculateLinesDrawPoints();
     void SetColor(const Colour& in_color){m_color = in_color;}
+    void CountBackword(const bool in_backword){m_bCountBackword = in_backword;}
+    
 private:
     void CalculateSpacesBetweenSeperetor();
     //==============================================================================
@@ -46,6 +48,7 @@ private:
     int m_numberOfSepertors = 1;
     Colour m_color = Colours::white;
     
+    bool m_bCountBackword = false;
     LineDraw::DirectionDrawLine m_direction = LineDraw::eHorizontal;
     
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (LinesDraw)

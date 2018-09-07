@@ -65,7 +65,7 @@ void LinesDraw::paint (Graphics& g)
     g.setColour (m_color);
     g.strokePath (m_lineAndSeperetorsPath, PathStrokeType (2.0f));
  
-    int counter = 0;
+    size_t counter = 0;
     int beginNextStep = 1;
     if (m_bCountBackword)
     {

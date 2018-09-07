@@ -72,13 +72,7 @@ void ToolBar::ShowWindow(Component& button, DialogType type)
 					m_rcpFilePath << (result.isLocalFile() ? result.getLocalFile().getFullPathName()
 						: result.toString(false));
 
-				AlertWindow::showMessageBoxAsync(AlertWindow::InfoIcon,
-					"File Chooser...",
-					"You picked: " + m_rcpFilePath);
-             
                     m_listener.Callback(m_rcpFilePath);
-                
-    
 			});
 		}
 		else if (type == saveChooser)

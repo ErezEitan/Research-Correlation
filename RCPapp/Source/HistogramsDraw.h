@@ -15,17 +15,19 @@
 #include <stdio.h>
 #include "../JuceLibraryCode/JuceHeader.h"
 #include "BaseComponentControl.h"
+#include "LinesAndSeperator.h"
 
-class HistogramsDraw  : public BaseComponentControl
+
+class HistogramsBar  : public BaseComponentControl
 {
 public:
     //==============================================================================
-    HistogramsDraw(MainComponent* in_mainComponent)
+    HistogramsBar(MainComponent* in_mainComponent)
     : BaseComponentControl(in_mainComponent)
     {
-        m_controlName = "HistogramsDraw";
+        m_controlName = "HistogramsBar";
     }
-    ~HistogramsDraw(){;}
+    ~HistogramsBar(){;}
     
     //==============================================================================
     void paint (Graphics&) override;
@@ -34,7 +36,46 @@ public:
 private:
     //==============================================================================
     // Your private member variables go here...
+    
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (HistogramsBar)
+};
 
+
+
+class HistogramsDraw  : public BaseComponentControl
+{
+public:
+    //==============================================================================
+    HistogramsDraw(MainComponent* in_mainComponent, std::vector<std::shared_ptr<BarDescriptorStruct>>& in_barDesriptors)
+    : BaseComponentControl(in_mainComponent)
+    , m_vBarDescriptors(in_barDesriptors)
+    {
+        m_controlName = "HistogramsDraw";
+    }
+    ~HistogramsDraw(){;}
+    
+    void InitHistogramDraw();
+    void InitHistogramsLines();
+    void InitHistogramsWight();
+    
+    void CalculateHistogramBars();
+    void CalculateHistogramLinesDrawPoints();
+    //==============================================================================
+    void resized() override;
+    
+private:
+    size_t m_numOfBars = 0;
+    float m_histogramBarWidthInPixel = 0.0f;
+    float m_histogramBarHightInPixel = 0.0f;
+    //==============================================================================
+    // Your private member variables go here...
+    std::vector<std::vector<std::shared_ptr<HistogramsBar>>> m_vHistogramBars;
+    std::vector<std::shared_ptr<LinesDraw>> m_vLineOfHistogramAxisX;
+    std::vector<std::shared_ptr<LinesDraw>> m_vLineOfHistogramAxisY;
+    std::vector<Path> m_vborderPath;
+    
+    std::vector<std::shared_ptr<BarDescriptorStruct>>& m_vBarDescriptors;
+    
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (HistogramsDraw)
 };
 

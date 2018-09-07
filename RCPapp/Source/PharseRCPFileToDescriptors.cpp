@@ -38,8 +38,16 @@ UTErr PharseRCPFileToDescriptors::OpenFilePathAndPharse(const String& in_string)
             if (eBarsDescriptor > lineIndex)
             {
                 PharseFileRCPDescriptorsHeader(lineRead, lineIndex);
+                if (eBarsDescriptor - 1 > lineIndex )
+                {
+                    for(int i = 0; i < m_rcpHeaderDescriptor.m_numOfBars; ++i)
+                    {
+                        m_vBarDescriptor.push_back(std::make_shared<BarDescriptorStruct>());
+                    }
+                    
+                }
             }
-            else
+            else if(m_rcpHeaderDescriptor.m_numOfBars > 0)
             {
                 PharseFileToDescriptors(lineRead, lineIndex - eBarsDescriptor);
             }
@@ -91,11 +99,6 @@ void PharseRCPFileToDescriptors::PharseFileRCPDescriptorsHeader(const String& in
         }
         sSubTypes.erase(0, pos + sDelimiter.length());
     } while (std::string::npos != pos);
-    
-    for(int i = 0; i < m_rcpHeaderDescriptor.m_numOfBars; ++i)
-    {
-         m_vBarDescriptor.push_back(std::make_shared<BarDescriptorStruct>());
-    }
 }
 
 //================================================================================================================

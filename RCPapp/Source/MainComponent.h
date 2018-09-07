@@ -28,7 +28,7 @@ public:
 private:
     //==============================================================================
     // Your private member variables go here...
-     std::vector<std::shared_ptr<BaseComponentControl>> m_vControls;
+    std::vector<std::shared_ptr<BaseComponentControl>> m_vControls;
     
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MainComponent)
 };

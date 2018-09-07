@@ -15,5 +15,6 @@
 class MainComponent;
 
 std::shared_ptr<BaseComponentControl> CreateDefaultControls(const String& in_ControlName, MainComponent* in_StandardGUI);
+//td::shared_ptr<Component> CreateToolBarControls(const String& in_ControlName, MainComponent* /*in_StandardGUI*/);
 
 #endif /* FactoryDefaultControls_h */

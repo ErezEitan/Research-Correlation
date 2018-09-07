@@ -31,7 +31,7 @@ public:
     void resized() override;
     void paint (Graphics& g) override;
     void SetDirection(const LineDraw::DirectionDrawLine in_direction) {m_direction = in_direction;}
-    void SetNumberOfSepertors(const int in_numberOfSepertors) {m_numberOfSepertors = in_numberOfSepertors;}
+    void SetNumberOfSepertors(const size_t in_numberOfSepertors) {m_numberOfSepertors = in_numberOfSepertors;}
     void CalculateLinesDrawPoints();
     void SetColor(const Colour& in_color){m_color = in_color;}
     void CountBackword(const bool in_backword){m_bCountBackword = in_backword;}
@@ -45,7 +45,7 @@ private:
     
     float m_barWidthLengthInPixel = 1.0f;
     float m_barHightLengthInPixel = 1.0f;
-    int m_numberOfSepertors = 1;
+    size_t m_numberOfSepertors = 1;
     Colour m_color = Colours::white;
     
     bool m_bCountBackword = false;

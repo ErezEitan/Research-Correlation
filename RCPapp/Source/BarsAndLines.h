@@ -16,7 +16,7 @@
 #include <stdio.h>
 #include "BaseComponentControl.h"
 #include "LoadFile.h"
-#include "PharseRCPFileToDescriptors.h"
+
 #include "LinesAndSeperator.h"
 #include "HistogramsDraw.h"
 #include "ArrowButtonForHistogramView.h"
@@ -86,8 +86,7 @@ public:
 protected:
     void InitBarsDrawArea();
     void InitBars();
-    void InitHistogramsLines();
-    void InitHistogramsWight();
+    void InitHistogramDraw();
     void InitHistogramsShowArrows();
     
 private:
@@ -96,23 +95,22 @@ private:
     // Members function
     void CalculateOneBarPixel();
     void CalculateBarsDrawArea();
-    void CalculateLinesDrawPoints();
-    void CalculateHistogramLinesDrawPoints();
+    void CalculateLinesBarsDrawPoints();
     void SetHightAndWidthForBars();
-    void CalculateHistograms();
-    void CalculateShowHistogramArrow();
     
+    void CalculateHistogramDraw();
+    void CalculateShowHistogramArrow();
     Rectangle<float> GetTheAreaLimiterFromBarsBeforeMe(const std::vector<int32_t>& in_vWhichBarBeforeMe);
     Rectangle<float> GetTheAreaLimiterFromBarsAfterMe(const std::vector<int32_t>& in_vWhichBarAfterMe);
-    
-    PharseRCPFileToDescriptors m_rcpDescriptors;
 
+    PharseRCPFileToDescriptors m_rcpDescriptors;
+    std::shared_ptr<HistogramsDraw> m_histogramsDraw;
+    
     LinesDraw m_lineAxisX;
     LinesDraw m_lineAxisY;
     std::shared_ptr<ArrowButtonForHistogramView> m_showHistogramOrBar;
     
     std::vector<std::shared_ptr<BarComponent>> m_vBars;
-    std::vector<std::vector<std::shared_ptr<HistogramsDraw>>> m_vHistogram;
     std::vector<std::shared_ptr<LinesDraw>> m_vLineOfHistogramAxisX;
     std::vector<std::shared_ptr<LinesDraw>> m_vLineOfHistogramAxisY;
     std::vector<Path> m_vborderPath;

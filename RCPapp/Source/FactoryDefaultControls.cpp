@@ -30,3 +30,18 @@ std::shared_ptr<BaseComponentControl> CreateDefaultControls(const String& in_Con
     
     return retVal;
 }
+/*
+//==============================================================================================================
+std::shared_ptr<Component> CreateToolBarControls(const String& in_ControlName, MainComponent* in_StandardGUI)
+//==============================================================================================================
+{
+    std::shared_ptr<BaseComponentControl> retVal = 0;
+    
+    if( in_ControlName == "ToolBar")
+    {
+        retVal = std::make_shared<ToolBar>();
+    }
+
+    return retVal;
+}
+*/

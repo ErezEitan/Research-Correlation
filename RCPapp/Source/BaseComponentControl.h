@@ -13,6 +13,7 @@
 #include <stdio.h>
 #include "Listener.h"
 #include "MainComponent.h"
+#include "PharseRCPFileToDescriptors.h"
 
 class BaseComponentControl  : public Component ,public Listener
 {
@@ -24,8 +25,10 @@ public:
     //==============================================================================
     void resized() override;
     virtual void AddListner(std::shared_ptr<ComponentCallbackListenerAbs> in_pListener){;}
+    virtual void Callback(const String in_msg, void* /*in_data*/) override {;}
     
 protected:
+   
     MainComponent* m_pMainCompenent = nullptr;
     String m_controlName = "ComponentControls";
     

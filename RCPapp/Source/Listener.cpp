@@ -9,11 +9,14 @@
 #include "Listener.h"
 
 //==============================================================================
-void Listener::Callback(const String in_msg, void* /*in_data*/)
+void Listener::Callback(const String in_msg, void* in_data)
 //==============================================================================
 {
-    if (m_pCallbackListener)
+    if (!m_vpCallbackListener.empty())
     {
-        m_pCallbackListener->Callback(in_msg);
+        for(auto &&inListener : m_vpCallbackListener)
+        {
+            inListener->Callback(in_msg, in_data);
+        }
     }
 }

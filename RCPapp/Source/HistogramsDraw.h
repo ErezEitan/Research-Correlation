@@ -46,9 +46,10 @@ class HistogramsDraw  : public BaseComponentControl
 {
 public:
     //==============================================================================
-    HistogramsDraw(MainComponent* in_mainComponent, std::vector<std::shared_ptr<BarDescriptorStruct>>& in_barDesriptors)
+    HistogramsDraw(MainComponent* in_mainComponent, std::vector<std::shared_ptr<BarDescriptorStruct>>& in_barDesriptors, RCPHeaderDescriptor& in_rcpHeaderDescriptor)
     : BaseComponentControl(in_mainComponent)
     , m_vBarDescriptors(in_barDesriptors)
+    , m_rcpHeaderDescriptor(in_rcpHeaderDescriptor)
     {
         m_controlName = "HistogramsDraw";
     }
@@ -58,15 +59,19 @@ public:
     void InitHistogramsLines();
     void InitHistogramsWight();
     
-    void CalculateHistogramBars();
     void CalculateHistogramLinesDrawPoints();
+    void CalculateHistogramWidthAndHight();
+    void CalculateHistogramBars();
+    
     //==============================================================================
     void resized() override;
+    void paint (Graphics& g) override;
     
 private:
     size_t m_numOfBars = 0;
     float m_histogramBarWidthInPixel = 0.0f;
     float m_histogramBarHightInPixel = 0.0f;
+    
     //==============================================================================
     // Your private member variables go here...
     std::vector<std::vector<std::shared_ptr<HistogramsBar>>> m_vHistogramBars;
@@ -75,6 +80,7 @@ private:
     std::vector<Path> m_vborderPath;
     
     std::vector<std::shared_ptr<BarDescriptorStruct>>& m_vBarDescriptors;
+    RCPHeaderDescriptor& m_rcpHeaderDescriptor;
     
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (HistogramsDraw)
 };

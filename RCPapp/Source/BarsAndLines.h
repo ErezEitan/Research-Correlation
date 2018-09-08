@@ -104,16 +104,17 @@ private:
     Rectangle<float> GetTheAreaLimiterFromBarsAfterMe(const std::vector<int32_t>& in_vWhichBarAfterMe);
 
     PharseRCPFileToDescriptors m_rcpDescriptors;
-    std::shared_ptr<HistogramsDraw> m_histogramsDraw;
+
     
     LinesDraw m_lineAxisX;
     LinesDraw m_lineAxisY;
     std::shared_ptr<ArrowButtonForHistogramView> m_showHistogramOrBar;
+    std::shared_ptr<HistogramsDraw> m_histogramsDraw;
     
     std::vector<std::shared_ptr<BarComponent>> m_vBars;
     std::vector<std::shared_ptr<LinesDraw>> m_vLineOfHistogramAxisX;
     std::vector<std::shared_ptr<LinesDraw>> m_vLineOfHistogramAxisY;
-    std::vector<Path> m_vborderPath;
+    
     int m_numOfBars = 0;
     float m_barWidthInPixel = 0.0f;
     float m_barHightInPixel = 0.0f;

@@ -20,6 +20,7 @@ void HistogramsDraw::InitHistogramDraw()
     
     InitHistogramsLines();
     CalculateHistogramLinesDrawPoints();
+    CalculateHistogramWidthAndHight();
     
     InitHistogramsWight();
     CalculateHistogramBars();
@@ -81,7 +82,7 @@ void HistogramsDraw::CalculateHistogramLinesDrawPoints()
 {
     if(!m_vLineOfHistogramAxisX.empty())
     {
-        Rectangle<float> localBounds = getLocalBounds().toFloat();
+        Rectangle<float> localBounds = getBounds().toFloat();
         
         float areaHightForHistogram = (localBounds.getHeight() / 4.0f);
         
@@ -101,12 +102,19 @@ void HistogramsDraw::CalculateHistogramLinesDrawPoints()
 }
 
 //==============================================================================
+void HistogramsDraw::CalculateHistogramWidthAndHight()
+//==============================================================================
+{
+    m_histogramBarWidthInPixel = getBounds().toFloat().getWidth() / m_numOfBars;
+    m_histogramBarHightInPixel = (getBounds().toFloat().getHeight() / 4.0f) / m_numOfBars;
+}
+
+//==============================================================================
 void HistogramsDraw::CalculateHistogramBars()
 //==============================================================================
 {
     if (0 != m_numOfBars)
     {
-        m_histogramBarWidthInPixel = getLocalBounds().toFloat().getWidth() / m_numOfBars;
         for (size_t j = 0; j < eNumberOfHistogramColors; ++j)
         {
             for (size_t i = 0; i < m_numOfBars; ++i)
@@ -135,9 +143,29 @@ void HistogramsDraw::resized()
 //==============================================================================
 {
     CalculateHistogramLinesDrawPoints();
+    CalculateHistogramWidthAndHight();
     CalculateHistogramBars();
 }
 
+//==============================================================================
+void HistogramsDraw::paint (Graphics& g)
+//==============================================================================
+{
+    if (!m_vborderPath.empty())
+    {
+        Rectangle<float> borderArea;
+        for (size_t i = 0; i < eNumberOfHistogramColors; ++i)
+        {
+            size_t border = m_rcpHeaderDescriptor.m_vBorderLineHistogram[i];
+            Rectangle<float> histogramLineArea = m_vLineOfHistogramAxisX[i]->getBounds().toFloat();
+            borderArea.setY((histogramLineArea.getY() + (histogramLineArea.getHeight() / 2)) - border * m_histogramBarHightInPixel);
+            borderArea.setWidth(histogramLineArea.getWidth());
+            borderArea.setHeight(20);
+            
+            g.drawLine(borderArea.getX(), borderArea.getY(), borderArea.getWidth(), borderArea.getY());
+        }
+    }
+}
 
 //=======================================    HistogramsBar      ====================================
 

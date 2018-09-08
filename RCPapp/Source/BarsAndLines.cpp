@@ -78,7 +78,8 @@ void BarAndLine::resized()
         CalculateOneBarPixel();
         CalculateLinesBarsDrawPoints();
         SetHightAndWidthForBars();
-        m_histogramsDraw->setBounds(m_areaForHistograms.toNearestInt());
+        CalculateHistogramDraw();
+        
         repaint();
     }
 }
@@ -142,7 +143,7 @@ void BarAndLine::InitHistogramsShowArrows()
 void BarAndLine::InitHistogramDraw()
 //==============================================================================
 {
-    m_histogramsDraw = std::make_shared<HistogramsDraw>(m_pMainCompenent, m_rcpDescriptors.GetBarDescriptor());
+    m_histogramsDraw = std::make_shared<HistogramsDraw>(m_pMainCompenent, m_rcpDescriptors.GetBarDescriptor(), m_rcpDescriptors.GetRcpHeaderDescriptor());
     m_histogramsDraw->setBounds(m_areaForHistograms.toNearestInt());
     m_histogramsDraw->InitHistogramDraw();
     addAndMakeVisible(*m_histogramsDraw);
@@ -232,25 +233,7 @@ void BarAndLine::CalculateHistogramDraw()
 void BarAndLine::paint (Graphics& g)
 //==============================================================================
 {
-    if (!m_vborderPath.empty())
-    {
-        float pixelOfHistogram = (m_vLineOfHistogramAxisY[0]->getBounds().toFloat().getHeight() / m_vBars.size());
-         
-        for (int i = 0; i < eNumberOfHistogramColors; ++i)
-        {
-            int border = m_rcpDescriptors.GetRcpHeaderDescriptor().m_vBorderLineHistogram[i];
-            Rectangle<float> histogramLineArea = m_vLineOfHistogramAxisX[i]->getBounds().toFloat();
-            
-            Rectangle<float> borderArea;
-
-            borderArea.setY((histogramLineArea.getY() + (histogramLineArea.getHeight() / 2)) - border * pixelOfHistogram);
-            borderArea.setX(histogramLineArea.getX());
-            borderArea.setWidth(histogramLineArea.getWidth());
-            borderArea.setHeight(10);
-            
-            g.drawLine(borderArea.getX(), borderArea.getY(), borderArea.getWidth(), borderArea.getY());
-        }
-    }
+ 
 }
 
 //==============================================================================
@@ -296,12 +279,11 @@ void BarAndLine::mouseDrag(const MouseEvent& e)
         }
     }
     
-  
-        if(e.eventComponent == &(*m_showHistogramOrBar))
-        {
-            m_factor = deltaDrag.getY();
-            resized();
-        }
+    if(e.eventComponent == &(*m_showHistogramOrBar))
+    {
+        m_factor = deltaDrag.getY();
+        resized();
+    }
     
     m_lastMouseLocation = getMouseXYRelative();
 }

@@ -31,9 +31,6 @@ void BarAndLine::Callback(const String in_msg, void* /*in_data*/)
     if(UTNoError(m_rcpDescriptors.OpenFilePathAndPharse(in_msg)))
     {
         m_vBars.clear();
-       // m_vHistogram.clear();
-        m_vLineOfHistogramAxisX.clear();
-        m_vLineOfHistogramAxisY.clear();
         removeAllChildren();
         
         InitBarsDrawArea();
@@ -95,10 +92,7 @@ void BarAndLine::InitBarsDrawArea()
     float reduce = (area.getHeight() * 0.5f);
     area.setBottom(area.getBottom() - reduce - m_factor);
     m_areaForHistograms.setTop(area.getBottom());
-   
-
     m_areaForBars = area;
-    area = m_areaForBars;
 }
 
 //==============================================================================
@@ -132,11 +126,21 @@ void BarAndLine::InitBars()
 void BarAndLine::InitHistogramsShowArrows()
 //==============================================================================
 {
-    m_showHistogramOrBar = std::make_shared<ArrowButtonForHistogramView>(m_pMainCompenent, 0.0f, Colours::aquamarine);
-    m_showHistogramOrBar->addMouseListener(this, false);
+    m_histogramBarDragArrow = std::make_shared<ArrowButtonForHistogramView>(m_pMainCompenent, 0.0f, Colours::aquamarine);
+    m_histogramBarDragArrow->addMouseListener(this, false);
+    addAndMakeVisible(*m_histogramBarDragArrow);
     
-    addAndMakeVisible(*m_showHistogramOrBar);
+    m_showBar = std::make_shared<ArrowButtonForHistogramView>(m_pMainCompenent, 0.0f, Colours::magenta);
+    m_showBar->addMouseListener(this, false);
+    addAndMakeVisible(*m_showBar);
     
+    m_showHistogram = std::make_shared<ArrowButtonForHistogramView>(m_pMainCompenent, 0.0f, Colours::purple);
+    m_showHistogram->addMouseListener(this, false);
+    addAndMakeVisible(*m_showHistogram);
+    
+    m_showAll = std::make_shared<ArrowButtonForHistogramView>(m_pMainCompenent, 0.0f, Colours::yellowgreen);
+    m_showAll->addMouseListener(this, false);
+    addAndMakeVisible(*m_showAll);
 }
 
 //==============================================================================
@@ -156,23 +160,30 @@ void BarAndLine::CalculateBarsDrawArea()
     Rectangle<float> area = getLocalBounds().toFloat();
     area.reduce(15.0f, 0.0f);
     
-    m_areaForBars.setWidth(area.getWidth());
-    m_areaForBars.setBottom(m_areaForBars.getBottom() - m_factor);
-    
-    m_areaForHistograms.setWidth(area.getWidth());
-    m_areaForHistograms.setBottom(area.getBottom());
-    m_areaForHistograms.setTop(m_areaForBars.getBottom());
-}
-
-//==============================================================================
-void BarAndLine::CalculateShowHistogramArrow()
-//==============================================================================
-{
-    Rectangle<float> area = getLocalBounds().toFloat();
-    //area.reduce(15.0f, 0.0f);
-    
-    area.setBottom(m_lineAxisX.getBounds().getBottom());
-    m_showHistogramOrBar->setBounds(area.getX(), area.getBottom() - 15.0f, 20.0f, 20.0f);
+    switch (m_showCase)
+    {
+        case 0:
+            m_areaForBars.setWidth(area.getWidth());
+            m_areaForBars.setBottom(m_areaForBars.getBottom() - m_factor);
+            m_areaForHistograms.setWidth(area.getWidth());
+            m_areaForHistograms.setBottom(area.getBottom());
+            m_areaForHistograms.setTop(m_areaForBars.getBottom());
+            break;
+          
+        case 1:
+            m_areaForBars.setWidth(area.getWidth());
+            m_areaForBars.setBottom(m_areaForBars.getBottom() - m_factor);
+            break;
+            
+        case 2:
+            m_areaForHistograms.setWidth(area.getWidth());
+            m_areaForHistograms.setBottom(area.getBottom());
+            m_areaForHistograms.setTop(m_areaForBars.getBottom());
+            break;
+            
+        default:
+            break;
+    }
 }
 
 //==============================================================================
@@ -194,7 +205,7 @@ void BarAndLine::CalculateLinesBarsDrawPoints()
 void BarAndLine::SetHightAndWidthForBars()
 //==============================================================================
 {
-   
+    
     if(m_rcpDescriptors.IsFileOpen())
     {
         if (0 != m_numOfBars)
@@ -223,10 +234,56 @@ void BarAndLine::SetHightAndWidthForBars()
 }
 
 //==============================================================================
+void BarAndLine::CalculateShowHistogramArrow()
+//==============================================================================
+{
+    m_histogramBarDragArrow->setBounds(0, 30, 20, 20);
+    m_showBar->setBounds(0, 10, 20, 20);
+    m_showHistogram->setBounds(0, 60, 20, 20);
+    m_showAll->setBounds(0, 90, 20, 20);
+}
+
+//==============================================================================
 void BarAndLine::CalculateHistogramDraw()
 //==============================================================================
 {
     m_histogramsDraw->setBounds(m_areaForHistograms.toNearestInt());
+}
+
+//==============================================================================
+void BarAndLine::ShowHandle(const int in_handle)
+//==============================================================================
+{
+    m_showCase = in_handle;
+    bool show = (in_handle == 1 || in_handle == 0) ? true : false;
+    m_lineAxisX.setVisible(show);
+    m_lineAxisY.setVisible(show);
+    
+    for(auto& bar : m_vBars)
+    {
+        bar->setVisible(show);
+    }
+    
+    m_histogramsDraw->setVisible(!show || in_handle == 0);
+    
+    switch (in_handle)
+    {
+        case 0:
+        case 1:
+        {
+            InitBarsDrawArea();
+        }
+        break;
+            
+        case 2:
+        {
+            m_areaForBars.setBottom(0);
+        }
+        break;
+            
+        default:
+            break;
+    }
 }
 
 //==============================================================================
@@ -279,11 +336,25 @@ void BarAndLine::mouseDrag(const MouseEvent& e)
         }
     }
     
-    if(e.eventComponent == &(*m_showHistogramOrBar))
+    if(e.eventComponent == &(*m_histogramBarDragArrow))
     {
+        m_showCase = 0;
         m_factor = deltaDrag.getY();
-        resized();
     }
+    else if(e.eventComponent == &(*m_showBar))
+    {
+        ShowHandle(1);
+    }
+    else if(e.eventComponent == &(*m_showHistogram))
+    {
+        ShowHandle(2);
+    }
+    else if(e.eventComponent == &(*m_showAll))
+    {
+        ShowHandle(0);
+    }
+    
+    resized();
     
     m_lastMouseLocation = getMouseXYRelative();
 }

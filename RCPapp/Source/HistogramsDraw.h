@@ -16,7 +16,7 @@
 #include "../JuceLibraryCode/JuceHeader.h"
 #include "BaseComponentControl.h"
 #include "LinesAndSeperator.h"
-
+#include "ArrowButtonForHistogramView.h"
 
 class HistogramsBar  : public BaseComponentControl
 {
@@ -66,12 +66,15 @@ public:
     //==============================================================================
     void resized() override;
     void paint (Graphics& g) override;
+    void mouseDrag(const MouseEvent& e) override;
     
 private:
+
     size_t m_numOfBars = 0;
     float m_histogramBarWidthInPixel = 0.0f;
     float m_histogramBarHightInPixel = 0.0f;
-    
+    float m_areaHistogramDevided = 4.0f;
+    float m_histogramsMultiple = 1.0f;
     //==============================================================================
     // Your private member variables go here...
     std::vector<std::vector<std::shared_ptr<HistogramsBar>>> m_vHistogramBars;
@@ -82,6 +85,8 @@ private:
     std::vector<std::shared_ptr<BarDescriptorStruct>>& m_vBarDescriptors;
     RCPHeaderDescriptor& m_rcpHeaderDescriptor;
     
+    std::vector<std::shared_ptr<ArrowButtonForHistogramView>> m_vHistogramShow;
+ 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (HistogramsDraw)
 };
 

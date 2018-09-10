@@ -16,14 +16,30 @@ void HistogramsDraw::InitHistogramDraw()
     m_vHistogramBars.clear();
     m_vLineOfHistogramAxisX.clear();
     m_vLineOfHistogramAxisY.clear();
+    m_vHistogramShow.clear();
+    
     m_numOfBars = m_vBarDescriptors.size();
     
     InitHistogramsLines();
     CalculateHistogramLinesDrawPoints();
-    CalculateHistogramWidthAndHight();
     
     InitHistogramsWight();
     CalculateHistogramBars();
+    
+    for (int i = 0; i < eNumberOfHistogramColors; ++i)
+    {
+        m_vHistogramShow.push_back(std::make_shared<ArrowButtonForHistogramView>(m_pMainCompenent, 0.0f, ColorsForHistograms[i]));
+        m_vHistogramShow[i]->setBounds(0, 10 + i * 10, 20, 20);
+        m_vHistogramShow[i]->addMouseListener(this, false);
+        addAndMakeVisible(*m_vHistogramShow[i]);
+
+    }
+    
+    m_vHistogramShow.push_back(std::make_shared<ArrowButtonForHistogramView>(m_pMainCompenent, 0.0f, Colours::gold));
+    m_vHistogramShow[eNumberOfHistogramColors]->setBounds(0, 10 + eNumberOfHistogramColors * 10, 20, 20);
+    m_vHistogramShow[eNumberOfHistogramColors]->addMouseListener(this, false);
+    addAndMakeVisible(*m_vHistogramShow[eNumberOfHistogramColors]);
+    
     repaint();
 }
 
@@ -82,18 +98,18 @@ void HistogramsDraw::CalculateHistogramLinesDrawPoints()
 {
     if(!m_vLineOfHistogramAxisX.empty())
     {
-        Rectangle<float> localBounds = getBounds().toFloat();
+        Rectangle<float> localBounds = getLocalBounds().toFloat();
         
-        float areaHightForHistogram = (localBounds.getHeight() / 4.0f);
+        float areaHightForHistogram = (localBounds.getHeight() / m_areaHistogramDevided);
         
         for (size_t i = 0; i < eNumberOfHistogramColors; ++i)
         {
-            Rectangle<float> areaLineDrawHorizontal(localBounds.getX(), localBounds.getBottom() - areaHightForHistogram * i - 30, localBounds.getWidth(), 30.0f);
+            Rectangle<float> areaLineDrawHorizontal(localBounds.getX(), localBounds.getBottom() - areaHightForHistogram * i * (m_histogramsMultiple) - 30, localBounds.getWidth(), 30.0f);
             m_vLineOfHistogramAxisX[i]->setBounds(areaLineDrawHorizontal.toNearestInt());
             m_vLineOfHistogramAxisX[i]->SetNumberOfSepertors(m_numOfBars);
             m_vLineOfHistogramAxisX[i]->resized();
             
-            Rectangle<float> areaLineDrawVertical(localBounds.getX(), localBounds.getBottom() - areaHightForHistogram * i - areaHightForHistogram, 30.0f, areaHightForHistogram);
+            Rectangle<float> areaLineDrawVertical(localBounds.getX(), localBounds.getBottom() - (areaHightForHistogram * i)  * (m_histogramsMultiple) - areaHightForHistogram, 30.0f, areaHightForHistogram);
             m_vLineOfHistogramAxisY[i]->setBounds(areaLineDrawVertical.toNearestInt());
             m_vLineOfHistogramAxisY[i]->SetNumberOfSepertors(m_numOfBars);
             m_vLineOfHistogramAxisY[i]->resized();
@@ -102,19 +118,13 @@ void HistogramsDraw::CalculateHistogramLinesDrawPoints()
 }
 
 //==============================================================================
-void HistogramsDraw::CalculateHistogramWidthAndHight()
-//==============================================================================
-{
-    m_histogramBarWidthInPixel = getBounds().toFloat().getWidth() / m_numOfBars;
-    m_histogramBarHightInPixel = (getBounds().toFloat().getHeight() / 4.0f) / m_numOfBars;
-}
-
-//==============================================================================
 void HistogramsDraw::CalculateHistogramBars()
 //==============================================================================
 {
     if (0 != m_numOfBars)
     {
+        m_histogramBarWidthInPixel = getLocalBounds().toFloat().getWidth() / m_numOfBars;
+        m_histogramBarHightInPixel = (getLocalBounds().toFloat().getHeight() / m_areaHistogramDevided) / m_numOfBars;
         for (size_t j = 0; j < eNumberOfHistogramColors; ++j)
         {
             for (size_t i = 0; i < m_numOfBars; ++i)
@@ -143,7 +153,6 @@ void HistogramsDraw::resized()
 //==============================================================================
 {
     CalculateHistogramLinesDrawPoints();
-    CalculateHistogramWidthAndHight();
     CalculateHistogramBars();
 }
 
@@ -153,11 +162,13 @@ void HistogramsDraw::paint (Graphics& g)
 {
     if (!m_vborderPath.empty())
     {
-        Rectangle<float> borderArea;
-        for (size_t i = 0; i < eNumberOfHistogramColors; ++i)
+        for (int i = 0; i < eNumberOfHistogramColors; ++i)
         {
-            size_t border = m_rcpHeaderDescriptor.m_vBorderLineHistogram[i];
+            int border = m_rcpHeaderDescriptor.m_vBorderLineHistogram[i];
             Rectangle<float> histogramLineArea = m_vLineOfHistogramAxisX[i]->getBounds().toFloat();
+            
+            Rectangle<float> borderArea;
+            
             borderArea.setY((histogramLineArea.getY() + (histogramLineArea.getHeight() / 2)) - border * m_histogramBarHightInPixel);
             borderArea.setWidth(histogramLineArea.getWidth());
             borderArea.setHeight(20);
@@ -166,6 +177,37 @@ void HistogramsDraw::paint (Graphics& g)
         }
     }
 }
+
+//=============================================================================
+void HistogramsDraw::mouseDrag(const MouseEvent& e)
+//==============================================================================
+{
+    m_areaHistogramDevided = 4.0f;
+    m_histogramsMultiple = 1.0f;
+    bool bShowAll = false;
+    if(e.eventComponent == &(*m_vHistogramShow[eNumberOfHistogramColors]))
+    {
+        bShowAll = true;
+    }
+    for (int i = 0; i < eNumberOfHistogramColors; ++i)
+    {
+        m_vLineOfHistogramAxisX[i]->setVisible(e.eventComponent == &(*m_vHistogramShow[i]) || bShowAll);
+        m_vLineOfHistogramAxisY[i]->setVisible(e.eventComponent == &(*m_vHistogramShow[i]) || bShowAll);
+        for (int j = 0; j < m_numOfBars; ++j)
+        {
+            m_vHistogramBars[i][j]->setVisible(e.eventComponent == &(*m_vHistogramShow[i]) || bShowAll);
+        }
+        
+        if(e.eventComponent == &(*m_vHistogramShow[i]))
+        {
+            m_areaHistogramDevided = 1.0f;
+            m_histogramsMultiple = 0.0f;
+        }
+    }
+    
+    resized();
+}
+
 
 //=======================================    HistogramsBar      ====================================
 

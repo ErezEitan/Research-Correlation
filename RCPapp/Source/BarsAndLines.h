@@ -36,7 +36,7 @@ public:
     void paint(Graphics& g) override
     {
         g.setColour(Colours::orange);
-        auto area = getLocalBounds().reduced(2);
+        auto area = getLocalBounds().reduced(1);
         g.drawRoundedRectangle(area.toFloat(), 2.0f, 2.0f);
         g.fillRect(area);
         g.setColour(findColour(TextButton::textColourOffId));
@@ -88,6 +88,7 @@ protected:
     void InitBars();
     void InitHistogramDraw();
     void InitHistogramsShowArrows();
+    void ShowHandle(const int in_handle);
     
 private:
     // Your private member variables go here...
@@ -108,12 +109,16 @@ private:
     
     LinesDraw m_lineAxisX;
     LinesDraw m_lineAxisY;
-    std::shared_ptr<ArrowButtonForHistogramView> m_showHistogramOrBar;
+    std::shared_ptr<ArrowButtonForHistogramView> m_histogramBarDragArrow;
+    std::shared_ptr<ArrowButtonForHistogramView> m_showBar;
+    std::shared_ptr<ArrowButtonForHistogramView> m_showHistogram;
+    std::shared_ptr<ArrowButtonForHistogramView> m_showAll;
+    
+    int m_showCase = 0;
+    
     std::shared_ptr<HistogramsDraw> m_histogramsDraw;
     
     std::vector<std::shared_ptr<BarComponent>> m_vBars;
-    std::vector<std::shared_ptr<LinesDraw>> m_vLineOfHistogramAxisX;
-    std::vector<std::shared_ptr<LinesDraw>> m_vLineOfHistogramAxisY;
     
     int m_numOfBars = 0;
     float m_barWidthInPixel = 0.0f;

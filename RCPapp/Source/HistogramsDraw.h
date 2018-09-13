@@ -66,8 +66,8 @@ public:
     //==============================================================================
     void resized() override;
     void paint (Graphics& g) override;
-    void mouseDrag(const MouseEvent& e) override;
-    
+    //void mouseDrag(const MouseEvent& e) override;
+    void mouseUp(const MouseEvent& e) override;
 private:
 
     size_t m_numOfBars = 0;
@@ -84,9 +84,10 @@ private:
     
     std::vector<std::shared_ptr<BarDescriptorStruct>>& m_vBarDescriptors;
     RCPHeaderDescriptor& m_rcpHeaderDescriptor;
-    
-    std::vector<std::shared_ptr<ArrowButtonForHistogramView>> m_vHistogramShow;
- 
+
+    LookAndFeelDemoComponent demoComp;
+    OwnedArray<LookAndFeel> lookAndFeels;
+
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (HistogramsDraw)
 };
 

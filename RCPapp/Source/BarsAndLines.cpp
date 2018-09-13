@@ -88,10 +88,9 @@ void BarAndLine::InitBarsDrawArea()
     Rectangle<float> area = getLocalBounds().toFloat();
     area.reduce(15.0f, 0.0f);
     m_areaForHistograms = area;
-    
     float reduce = (area.getHeight() * 0.5f);
     area.setBottom(area.getBottom() - reduce - m_factor);
-    m_areaForHistograms.setTop(area.getBottom());
+    m_areaForHistograms.setTop(area.getBottom() + 15);
     m_areaForBars = area;
 }
 
@@ -167,7 +166,7 @@ void BarAndLine::CalculateBarsDrawArea()
             m_areaForBars.setBottom(m_areaForBars.getBottom() - m_factor);
             m_areaForHistograms.setWidth(area.getWidth());
             m_areaForHistograms.setBottom(area.getBottom());
-            m_areaForHistograms.setTop(m_areaForBars.getBottom());
+            m_areaForHistograms.setTop(m_areaForBars.getBottom() + 15);
             break;
           
         case 1:
@@ -178,7 +177,7 @@ void BarAndLine::CalculateBarsDrawArea()
         case 2:
             m_areaForHistograms.setWidth(area.getWidth());
             m_areaForHistograms.setBottom(area.getBottom());
-            m_areaForHistograms.setTop(m_areaForBars.getBottom());
+            m_areaForHistograms.setTop(m_areaForBars.getBottom() + 15);
             break;
             
         default:
@@ -284,6 +283,8 @@ void BarAndLine::ShowHandle(const int in_handle)
         default:
             break;
     }
+    
+    resized();
 }
 
 //==============================================================================
@@ -332,6 +333,11 @@ void BarAndLine::mouseDrag(const MouseEvent& e)
                     area.setX(area.getX() - deltaDrag.getX());
                     e.eventComponent->setBounds(area.toNearestInt());
                 }
+                else if((area.getX() - deltaDrag.getX()) < areaBarAfterMe.getX())
+                {
+                    area.setX(area.getX() - deltaDrag.getX());
+                    e.eventComponent->setBounds(area.toNearestInt());
+                }
             }
         }
     }
@@ -340,6 +346,7 @@ void BarAndLine::mouseDrag(const MouseEvent& e)
     {
         m_showCase = 0;
         m_factor = deltaDrag.getY();
+         resized();
     }
     else if(e.eventComponent == &(*m_showBar))
     {
@@ -353,8 +360,6 @@ void BarAndLine::mouseDrag(const MouseEvent& e)
     {
         ShowHandle(0);
     }
-    
-    resized();
     
     m_lastMouseLocation = getMouseXYRelative();
 }

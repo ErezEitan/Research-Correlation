@@ -43,6 +43,6 @@ void MainComponent::resized()
     // update their positions.
     if (!m_vControls.empty()) {
         m_vControls[0]->setSize(getWidth(), 50);
-        m_vControls[1]->setBounds(30, m_vControls[0]->getHeight(), getWidth() - 30, getHeight() - m_vControls[0]->getHeight());
+        m_vControls[1]->setBounds(3, m_vControls[0]->getHeight(), getWidth() - 3, getHeight() - m_vControls[0]->getHeight());
     }
 }

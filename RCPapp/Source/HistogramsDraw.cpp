@@ -16,8 +16,7 @@ void HistogramsDraw::InitHistogramDraw()
     m_vHistogramBars.clear();
     m_vLineOfHistogramAxisX.clear();
     m_vLineOfHistogramAxisY.clear();
-    m_vHistogramShow.clear();
-    
+
     m_numOfBars = m_vBarDescriptors.size();
     
     InitHistogramsLines();
@@ -25,21 +24,9 @@ void HistogramsDraw::InitHistogramDraw()
     
     InitHistogramsWight();
     CalculateHistogramBars();
-    
-    for (int i = 0; i < eNumberOfHistogramColors; ++i)
-    {
-        m_vHistogramShow.push_back(std::make_shared<ArrowButtonForHistogramView>(m_pMainCompenent, 0.0f, ColorsForHistograms[i]));
-        m_vHistogramShow[i]->setBounds(0, 10 + i * 10, 20, 20);
-        m_vHistogramShow[i]->addMouseListener(this, false);
-        addAndMakeVisible(*m_vHistogramShow[i]);
 
-    }
-    
-    m_vHistogramShow.push_back(std::make_shared<ArrowButtonForHistogramView>(m_pMainCompenent, 0.0f, Colours::gold));
-    m_vHistogramShow[eNumberOfHistogramColors]->setBounds(0, 10 + eNumberOfHistogramColors * 10, 20, 20);
-    m_vHistogramShow[eNumberOfHistogramColors]->addMouseListener(this, false);
-    addAndMakeVisible(*m_vHistogramShow[eNumberOfHistogramColors]);
-    
+    addAndMakeVisible (demoComp);
+    demoComp.addMouseListener(this, true);
     repaint();
 }
 
@@ -99,7 +86,7 @@ void HistogramsDraw::CalculateHistogramLinesDrawPoints()
     if(!m_vLineOfHistogramAxisX.empty())
     {
         Rectangle<float> localBounds = getLocalBounds().toFloat();
-        
+        localBounds.removeFromTop(20);
         float areaHightForHistogram = (localBounds.getHeight() / m_areaHistogramDevided);
         
         for (size_t i = 0; i < eNumberOfHistogramColors; ++i)
@@ -135,7 +122,7 @@ void HistogramsDraw::CalculateHistogramBars()
                 
                 Rectangle<float> histogramBounds;
                 histogramBounds.setY(lineXHistogramBounds.getY());
-                  histogramBounds.setX((lineXHistogramBounds.getX() + lineXHistogramBounds.getHeight() / 2) + (i * m_histogramBarWidthInPixel));
+                histogramBounds.setX((lineXHistogramBounds.getX() + lineXHistogramBounds.getHeight() / 2) + (i * m_histogramBarWidthInPixel));
                 
                 histogramBounds.setTop((lineXHistogramBounds.getY() + lineYHistogramBounds.getWidth()  / 2) - wight);
                 histogramBounds.setHeight(wight);
@@ -154,6 +141,10 @@ void HistogramsDraw::resized()
 {
     CalculateHistogramLinesDrawPoints();
     CalculateHistogramBars();
+    
+    auto area = getLocalBounds();
+    area.setBounds(0, 0, area.getWidth(), 15);
+    demoComp.setBounds (area);
 }
 
 //==============================================================================
@@ -179,33 +170,57 @@ void HistogramsDraw::paint (Graphics& g)
 }
 
 //=============================================================================
-void HistogramsDraw::mouseDrag(const MouseEvent& e)
+void HistogramsDraw::mouseUp(const MouseEvent& e)
 //==============================================================================
 {
-    m_areaHistogramDevided = 4.0f;
-    m_histogramsMultiple = 1.0f;
-    bool bShowAll = false;
-    if(e.eventComponent == &(*m_vHistogramShow[eNumberOfHistogramColors]))
+    for(auto& inRadio : demoComp.radioButtons)
     {
-        bShowAll = true;
-    }
-    for (int i = 0; i < eNumberOfHistogramColors; ++i)
-    {
-        m_vLineOfHistogramAxisX[i]->setVisible(e.eventComponent == &(*m_vHistogramShow[i]) || bShowAll);
-        m_vLineOfHistogramAxisY[i]->setVisible(e.eventComponent == &(*m_vHistogramShow[i]) || bShowAll);
-        for (int j = 0; j < m_numOfBars; ++j)
+        if (inRadio == e.eventComponent)
         {
-            m_vHistogramBars[i][j]->setVisible(e.eventComponent == &(*m_vHistogramShow[i]) || bShowAll);
-        }
-        
-        if(e.eventComponent == &(*m_vHistogramShow[i]))
-        {
-            m_areaHistogramDevided = 1.0f;
-            m_histogramsMultiple = 0.0f;
+            m_areaHistogramDevided = 4.0f;
+            m_histogramsMultiple = 1.0f;
+            bool bShowAll = false;
+            int index = demoComp.GetCurrentIndex();
+            switch (index)
+            {
+                case 4:
+                    bShowAll = true;
+                    for (int i = 0; i < eNumberOfHistogramColors; ++i)
+                    {
+                        m_vLineOfHistogramAxisX[i]->setVisible(i == index|| bShowAll);
+                        m_vLineOfHistogramAxisY[i]->setVisible(i == index|| bShowAll);
+                        for (int j = 0; j < m_numOfBars; ++j)
+                        {
+                            m_vHistogramBars[i][j]->setVisible(i == index|| bShowAll);
+                        }
+                        
+                    }
+                    break;
+                    
+                default:
+                    
+                    for (int i = 0; i < eNumberOfHistogramColors; ++i)
+                    {
+                        m_vLineOfHistogramAxisX[i]->setVisible(i == index|| bShowAll);
+                        m_vLineOfHistogramAxisY[i]->setVisible(i == index|| bShowAll);
+                        for (int j = 0; j < m_numOfBars; ++j)
+                        {
+                            m_vHistogramBars[i][j]->setVisible(i == index|| bShowAll);
+                        }
+                        
+                        if(i == index)
+                        {
+                            m_areaHistogramDevided = 1.0f;
+                            m_histogramsMultiple = 0.0f;
+                        }
+                    }
+                    break;
+            }
+            
+            resized();
+            break;
         }
     }
-    
-    resized();
 }
 
 

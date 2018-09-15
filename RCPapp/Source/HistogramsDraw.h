@@ -50,7 +50,7 @@ public:
     : BaseComponentControl(in_mainComponent)
     , m_vBarDescriptors(in_barDesriptors)
     , m_rcpHeaderDescriptor(in_rcpHeaderDescriptor)
-    , m_selectedHistogramRadioButton(5, 42)
+    , m_selectedHistogramRadioButton(in_mainComponent, 5, 42)
     {
         m_controlName = "HistogramsDraw";
     }

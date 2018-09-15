@@ -192,48 +192,35 @@ void HistogramsDraw::mouseUp(const MouseEvent& e)
     {
         if (inRadio == e.eventComponent)
         {
-            m_areaHistogramDevided = 4.0f;
-            m_histogramsMultiple = 1.0f;
             bool bShowAll = false;
             int index = m_selectedHistogramRadioButton.GetCurrentIndex();
+            
             switch (index)
             {
                 case 4:
+                    m_areaHistogramDevided = 4.0f;
+                    m_histogramsMultiple = 1.0f;
                     bShowAll = true;
-                    for (int i = 0; i < eNumberOfHistogramColors; ++i)
-                    {
-                        m_vLineOfHistogramAxisX[i]->setVisible(i == index|| bShowAll);
-                        m_vLineOfHistogramAxisY[i]->setVisible(i == index|| bShowAll);
-                        for (int j = 0; j < m_numOfBars; ++j)
-                        {
-                            m_vHistogramBars[i][j]->setVisible(i == index|| bShowAll);
-                        }
-                        
-                    }
                     break;
                     
                 default:
-                    
-                    for (int i = 0; i < eNumberOfHistogramColors; ++i)
-                    {
-                        m_vLineOfHistogramAxisX[i]->setVisible(i == index|| bShowAll);
-                        m_vLineOfHistogramAxisY[i]->setVisible(i == index|| bShowAll);
-                        for (int j = 0; j < m_numOfBars; ++j)
-                        {
-                            m_vHistogramBars[i][j]->setVisible(i == index|| bShowAll);
-                        }
-                        
-                        if(i == index)
-                        {
-                            m_areaHistogramDevided = 1.0f;
-                            m_histogramsMultiple = 0.0f;
-                        }
-                    }
+                    m_areaHistogramDevided = 1.0f;
+                    m_histogramsMultiple = 0.0f;
                     break;
             }
             
+            for (int i = 0; i < eNumberOfHistogramColors; ++i)
+            {
+                m_vLineOfHistogramAxisX[i]->setVisible(i == index|| bShowAll);
+                m_vLineOfHistogramAxisY[i]->setVisible(i == index|| bShowAll);
+                for (int j = 0; j < m_numOfBars; ++j)
+                {
+                    m_vHistogramBars[i][j]->setVisible(i == index|| bShowAll);
+                }
+                
+            }
+            
             resized();
-            break;
         }
     }
 }

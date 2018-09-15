@@ -16,7 +16,7 @@ BarAndLine::BarAndLine(MainComponent* in_mainComponent)
     : BaseComponentControl(in_mainComponent)
     , m_lineAxisX(in_mainComponent)
     , m_lineAxisY(in_mainComponent)
-    , m_selectedBarOrHistogramRadioButton(3, 44)
+    , m_selectedBarOrHistogramRadioButton(in_mainComponent, 3, 44)
 //==============================================================================
 {
     m_controlName = "BarAndLine";

@@ -19,7 +19,7 @@
 
 #include "LinesAndSeperator.h"
 #include "HistogramsDraw.h"
-#include "ArrowButtonForHistogramView.h"
+#include "RadioButton.h"
 
 //==============================================================================
 /** This will be the source of our balls and can be dragged around. */
@@ -102,6 +102,7 @@ private:
     
     void CalculateHistogramDraw();
     void CalculateShowRadioButton();
+    
     Rectangle<float> GetTheAreaLimiterFromBarsBeforeMe(const std::vector<int32_t>& in_vWhichBarBeforeMe);
     Rectangle<float> GetTheAreaLimiterFromBarsAfterMe(const std::vector<int32_t>& in_vWhichBarAfterMe);
 
@@ -109,18 +110,18 @@ private:
     
     LinesDraw m_lineAxisX;
     LinesDraw m_lineAxisY;
-    RadioButtons m_selectedBarOrHistogramRadioButton;
     
     int m_showCase = 0;
+    RadioButtons m_selectedBarOrHistogramRadioButton;
     
     std::shared_ptr<HistogramsDraw> m_histogramsDraw;
-    
     std::vector<std::shared_ptr<BarComponent>> m_vBars;
     
     int m_numOfBars = 0;
     float m_barWidthInPixel = 0.0f;
     float m_barHightInPixel = 0.0f;
     float m_arrowDistance = 0;
+    
     Rectangle<float> m_areaForBars;
     Rectangle<float> m_areaForHistograms;
 

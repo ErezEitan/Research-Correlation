@@ -15,7 +15,7 @@
 		78180E0121208B0600495400 /* LinesAndSeperator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 78180DFF21208B0600495400 /* LinesAndSeperator.cpp */; };
 		783170432119F040002131A5 /* BaseComponentControl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 783170412119F040002131A5 /* BaseComponentControl.cpp */; };
 		78317046211A22EC002131A5 /* FactoryDefaultControls.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 78317044211A22EC002131A5 /* FactoryDefaultControls.cpp */; };
-		787587F3213262E1000A15C7 /* ArrowButtonForHistogramView.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 787587F1213262E1000A15C7 /* ArrowButtonForHistogramView.cpp */; };
+		787587F3213262E1000A15C7 /* RadioButton.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 787587F1213262E1000A15C7 /* RadioButton.cpp */; };
 		78C6140320FCF38400FA541C /* LoadFile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 78C613FE20FCF38400FA541C /* LoadFile.cpp */; };
 		78C6140420FCF38400FA541C /* PharseRCPFileToDescriptors.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 78C6140020FCF38400FA541C /* PharseRCPFileToDescriptors.cpp */; };
 		78CD295220FF920C00CF0241 /* Listener.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 78CD295020FF920C00CF0241 /* Listener.cpp */; };
@@ -60,8 +60,8 @@
 		783170422119F040002131A5 /* BaseComponentControl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BaseComponentControl.h; path = ../../Source/BaseComponentControl.h; sourceTree = "<group>"; };
 		78317044211A22EC002131A5 /* FactoryDefaultControls.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = FactoryDefaultControls.cpp; path = ../../Source/FactoryDefaultControls.cpp; sourceTree = "<group>"; };
 		78317045211A22EC002131A5 /* FactoryDefaultControls.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FactoryDefaultControls.h; path = ../../Source/FactoryDefaultControls.h; sourceTree = "<group>"; };
-		787587F1213262E1000A15C7 /* ArrowButtonForHistogramView.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ArrowButtonForHistogramView.cpp; path = ../../Source/ArrowButtonForHistogramView.cpp; sourceTree = "<group>"; };
-		787587F2213262E1000A15C7 /* ArrowButtonForHistogramView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ArrowButtonForHistogramView.h; path = ../../Source/ArrowButtonForHistogramView.h; sourceTree = "<group>"; };
+		787587F1213262E1000A15C7 /* RadioButton.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = RadioButton.cpp; path = ../../Source/RadioButton.cpp; sourceTree = "<group>"; };
+		787587F2213262E1000A15C7 /* RadioButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RadioButton.h; path = ../../Source/RadioButton.h; sourceTree = "<group>"; };
 		78C613FD20FCF38400FA541C /* ErrorList.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ErrorList.h; path = ../../Source/ErrorList.h; sourceTree = "<group>"; };
 		78C613FE20FCF38400FA541C /* LoadFile.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = LoadFile.cpp; path = ../../Source/LoadFile.cpp; sourceTree = "<group>"; };
 		78C613FF20FCF38400FA541C /* LoadFile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LoadFile.h; path = ../../Source/LoadFile.h; sourceTree = "<group>"; };
@@ -155,8 +155,8 @@
 				78317045211A22EC002131A5 /* FactoryDefaultControls.h */,
 				78180DFF21208B0600495400 /* LinesAndSeperator.cpp */,
 				78180E0021208B0600495400 /* LinesAndSeperator.h */,
-				787587F1213262E1000A15C7 /* ArrowButtonForHistogramView.cpp */,
-				787587F2213262E1000A15C7 /* ArrowButtonForHistogramView.h */,
+				787587F1213262E1000A15C7 /* RadioButton.cpp */,
+				787587F2213262E1000A15C7 /* RadioButton.h */,
 			);
 			name = Source;
 			sourceTree = "<group>";
@@ -316,7 +316,7 @@
 				78E52040210D7D850086A8BA /* BarsAndLines.cpp in Sources */,
 				78317046211A22EC002131A5 /* FactoryDefaultControls.cpp in Sources */,
 				A3DF488AA56279A71D07ACA5 /* include_juce_gui_extra.mm in Sources */,
-				787587F3213262E1000A15C7 /* ArrowButtonForHistogramView.cpp in Sources */,
+				787587F3213262E1000A15C7 /* RadioButton.cpp in Sources */,
 				6D8D0003AE52072DBDF2C7C6 /* include_juce_opengl.mm in Sources */,
 				78F63B4521196B2E00AF7832 /* HistogramsDraw.cpp in Sources */,
 			);

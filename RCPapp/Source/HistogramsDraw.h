@@ -16,7 +16,7 @@
 #include "../JuceLibraryCode/JuceHeader.h"
 #include "BaseComponentControl.h"
 #include "LinesAndSeperator.h"
-#include "ArrowButtonForHistogramView.h"
+#include "RadioButton.h"
 
 class HistogramsBar  : public BaseComponentControl
 {
@@ -87,7 +87,6 @@ private:
     RCPHeaderDescriptor& m_rcpHeaderDescriptor;
 
     RadioButtons m_selectedHistogramRadioButton;
-    OwnedArray<LookAndFeel> lookAndFeels;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (HistogramsDraw)
 };

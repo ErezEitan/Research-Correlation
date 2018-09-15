@@ -16,6 +16,7 @@ BarAndLine::BarAndLine(MainComponent* in_mainComponent)
     : BaseComponentControl(in_mainComponent)
     , m_lineAxisX(in_mainComponent)
     , m_lineAxisY(in_mainComponent)
+    , m_selectedBarOrHistogramRadioButton(3, 44)
 //==============================================================================
 {
     m_controlName = "BarAndLine";
@@ -32,7 +33,7 @@ void BarAndLine::Callback(const String in_msg, void* /*in_data*/)
     {
         m_vBars.clear();
         removeAllChildren();
-        
+
         InitBarsDrawArea();
         CalculateOneBarPixel();
         CalculateLinesBarsDrawPoints();
@@ -40,12 +41,12 @@ void BarAndLine::Callback(const String in_msg, void* /*in_data*/)
     
         addAndMakeVisible(m_lineAxisX);
         addAndMakeVisible(m_lineAxisY);
-    
+        
         InitHistogramDraw();
         CalculateHistogramDraw();
         
-        InitHistogramsShowArrows();
-        CalculateShowHistogramArrow();
+        InitShowRadioButton();
+        CalculateShowRadioButton();
         
         repaint();
     }
@@ -68,7 +69,7 @@ void BarAndLine::resized()
     // This is called when the MainComponent is resized.
     // If you add any child components, this is where you should
     // update their positions.
-    
+
     if(m_rcpDescriptors.IsFileOpen())
     {
         CalculateBarsDrawArea();
@@ -87,6 +88,7 @@ void BarAndLine::InitBarsDrawArea()
 {
     Rectangle<float> area = getLocalBounds().toFloat();
     area.reduce(15.0f, 0.0f);
+    area.setTop(area.getY() + 30);
     m_areaForHistograms = area;
     float reduce = (area.getHeight() * 0.5f);
     area.setBottom(area.getBottom() - reduce - m_factor);
@@ -112,7 +114,7 @@ void BarAndLine::InitBars()
             m_vBars[i]->addMouseListener(this, false);
             addAndMakeVisible(*m_vBars[i]);
             
-            Rectangle<float> barBounds(m_lineAxisY.getX() * 2.0f, (i * m_barHightInPixel), m_barWidthInPixel * vBarDescriptor[i]->m_barLength, m_barHightInPixel);
+            Rectangle<float> barBounds(m_lineAxisY.getX() * 2.0f, (i * m_barHightInPixel) + 30, m_barWidthInPixel * vBarDescriptor[i]->m_barLength, m_barHightInPixel);
             m_vBars[i]->setBounds(barBounds.toNearestInt());
             m_vBars[i]->SetBarDescriptor(*vBarDescriptor[i]);
         }
@@ -122,24 +124,14 @@ void BarAndLine::InitBars()
 }
 
 //==============================================================================
-void BarAndLine::InitHistogramsShowArrows()
+void BarAndLine::InitShowRadioButton()
 //==============================================================================
 {
-    m_histogramBarDragArrow = std::make_shared<ArrowButtonForHistogramView>(m_pMainCompenent, 0.0f, Colours::aquamarine);
-    m_histogramBarDragArrow->addMouseListener(this, false);
-    addAndMakeVisible(*m_histogramBarDragArrow);
-    
-    m_showBar = std::make_shared<ArrowButtonForHistogramView>(m_pMainCompenent, 0.0f, Colours::magenta);
-    m_showBar->addMouseListener(this, false);
-    addAndMakeVisible(*m_showBar);
-    
-    m_showHistogram = std::make_shared<ArrowButtonForHistogramView>(m_pMainCompenent, 0.0f, Colours::purple);
-    m_showHistogram->addMouseListener(this, false);
-    addAndMakeVisible(*m_showHistogram);
-    
-    m_showAll = std::make_shared<ArrowButtonForHistogramView>(m_pMainCompenent, 0.0f, Colours::yellowgreen);
-    m_showAll->addMouseListener(this, false);
-    addAndMakeVisible(*m_showAll);
+    addAndMakeVisible (m_selectedBarOrHistogramRadioButton);
+    m_selectedBarOrHistogramRadioButton.addMouseListener(this, true);
+    m_selectedBarOrHistogramRadioButton.SetButtonText(0, "All");
+    m_selectedBarOrHistogramRadioButton.SetButtonText(1, "Bars");
+    m_selectedBarOrHistogramRadioButton.SetButtonText(2, "Histograms");
 }
 
 //==============================================================================
@@ -171,7 +163,7 @@ void BarAndLine::CalculateBarsDrawArea()
           
         case 1:
             m_areaForBars.setWidth(area.getWidth());
-            m_areaForBars.setBottom(m_areaForBars.getBottom() - m_factor);
+            m_areaForBars.setBottom(area.getBottom() - m_factor - 15.0f);
             break;
             
         case 2:
@@ -217,7 +209,7 @@ void BarAndLine::SetHightAndWidthForBars()
             for (int cur = 0; cur < m_vBars.size(); ++cur)
             {
                 Rectangle<float> curBarBounds = m_vBars[cur]->getBounds().toFloat();
-                curBarBounds.setY((cur * m_barHightInPixel));
+                curBarBounds.setY((cur * m_barHightInPixel + 30));
                 m_vBars[cur]->setBounds(curBarBounds.toNearestInt());
                 for (int j = 0; j < m_vBars[cur]->GetBarDescriptor().m_vWhichBarAfterMe.size(); ++j)
                 {
@@ -233,13 +225,12 @@ void BarAndLine::SetHightAndWidthForBars()
 }
 
 //==============================================================================
-void BarAndLine::CalculateShowHistogramArrow()
+void BarAndLine::CalculateShowRadioButton()
 //==============================================================================
 {
-    m_histogramBarDragArrow->setBounds(0, 30, 20, 20);
-    m_showBar->setBounds(0, 10, 20, 20);
-    m_showHistogram->setBounds(0, 60, 20, 20);
-    m_showAll->setBounds(0, 90, 20, 20);
+    auto area = getLocalBounds();
+    area.setBounds(0, 0, area.getWidth(), 15);
+    m_selectedBarOrHistogramRadioButton.setBounds (area);
 }
 
 //==============================================================================
@@ -294,6 +285,49 @@ void BarAndLine::paint (Graphics& g)
  
 }
 
+//=============================================================================
+void BarAndLine::mouseUp(const MouseEvent& e)
+//==============================================================================
+{
+    for(auto& inRadio : m_selectedBarOrHistogramRadioButton.m_radioButtons)
+    {
+        if (inRadio == e.eventComponent)
+        {
+            int index = m_selectedBarOrHistogramRadioButton.GetCurrentIndex();
+            m_showCase = index;
+            bool show = (index == 1 || index == 0) ? true : false;
+            m_lineAxisX.setVisible(show);
+            m_lineAxisY.setVisible(show);
+            
+            for(auto& bar : m_vBars)
+            {
+                bar->setVisible(show);
+            }
+            
+            m_histogramsDraw->setVisible(!show || index == 0);
+            
+            switch (index)
+            {
+                case 0:
+                case 1:
+                {
+                    InitBarsDrawArea();
+                }
+                break;
+                    
+                case 2:
+                {
+                    m_areaForBars.setBottom(0);
+                }
+                break;
+            }
+            
+            resized();
+            break;
+        }
+    }
+}
+
 //==============================================================================
 void BarAndLine::mouseDown(const MouseEvent& e)
 //==============================================================================
@@ -341,26 +375,7 @@ void BarAndLine::mouseDrag(const MouseEvent& e)
             }
         }
     }
-    
-    if(e.eventComponent == &(*m_histogramBarDragArrow))
-    {
-        m_showCase = 0;
-        m_factor = deltaDrag.getY();
-         resized();
-    }
-    else if(e.eventComponent == &(*m_showBar))
-    {
-        ShowHandle(1);
-    }
-    else if(e.eventComponent == &(*m_showHistogram))
-    {
-        ShowHandle(2);
-    }
-    else if(e.eventComponent == &(*m_showAll))
-    {
-        ShowHandle(0);
-    }
-    
+
     m_lastMouseLocation = getMouseXYRelative();
 }
 

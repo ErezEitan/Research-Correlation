@@ -15,7 +15,7 @@ enum HistogramColor
 
 const Colour ColorsForHistograms[eNumberOfHistogramColors] = {
     Colours::red,
-    Colours::blue,
+    Colours::aqua,
     Colours::green,
     Colours::yellow
 };

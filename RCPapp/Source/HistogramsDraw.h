@@ -50,6 +50,7 @@ public:
     : BaseComponentControl(in_mainComponent)
     , m_vBarDescriptors(in_barDesriptors)
     , m_rcpHeaderDescriptor(in_rcpHeaderDescriptor)
+    , m_selectedHistogramRadioButton(5, 42)
     {
         m_controlName = "HistogramsDraw";
     }
@@ -58,6 +59,7 @@ public:
     void InitHistogramDraw();
     void InitHistogramsLines();
     void InitHistogramsWight();
+    void InitHistogramsShowRadioButton();
     
     void CalculateHistogramLinesDrawPoints();
     void CalculateHistogramWidthAndHight();
@@ -66,7 +68,6 @@ public:
     //==============================================================================
     void resized() override;
     void paint (Graphics& g) override;
-    //void mouseDrag(const MouseEvent& e) override;
     void mouseUp(const MouseEvent& e) override;
 private:
 
@@ -85,7 +86,7 @@ private:
     std::vector<std::shared_ptr<BarDescriptorStruct>>& m_vBarDescriptors;
     RCPHeaderDescriptor& m_rcpHeaderDescriptor;
 
-    LookAndFeelDemoComponent demoComp;
+    RadioButtons m_selectedHistogramRadioButton;
     OwnedArray<LookAndFeel> lookAndFeels;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (HistogramsDraw)

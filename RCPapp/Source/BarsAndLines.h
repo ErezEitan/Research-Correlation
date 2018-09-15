@@ -81,13 +81,14 @@ public:
     void resized() override;
     void mouseDrag(const MouseEvent& e) override;
     void mouseDown(const MouseEvent& e) override;
+    void mouseUp(const MouseEvent& e);
     virtual void Callback(const String in_msg, void* /*in_data*/) override;
     
 protected:
     void InitBarsDrawArea();
     void InitBars();
     void InitHistogramDraw();
-    void InitHistogramsShowArrows();
+    void InitShowRadioButton();
     void ShowHandle(const int in_handle);
     
 private:
@@ -100,19 +101,15 @@ private:
     void SetHightAndWidthForBars();
     
     void CalculateHistogramDraw();
-    void CalculateShowHistogramArrow();
+    void CalculateShowRadioButton();
     Rectangle<float> GetTheAreaLimiterFromBarsBeforeMe(const std::vector<int32_t>& in_vWhichBarBeforeMe);
     Rectangle<float> GetTheAreaLimiterFromBarsAfterMe(const std::vector<int32_t>& in_vWhichBarAfterMe);
 
     PharseRCPFileToDescriptors m_rcpDescriptors;
-
     
     LinesDraw m_lineAxisX;
     LinesDraw m_lineAxisY;
-    std::shared_ptr<ArrowButtonForHistogramView> m_histogramBarDragArrow;
-    std::shared_ptr<ArrowButtonForHistogramView> m_showBar;
-    std::shared_ptr<ArrowButtonForHistogramView> m_showHistogram;
-    std::shared_ptr<ArrowButtonForHistogramView> m_showAll;
+    RadioButtons m_selectedBarOrHistogramRadioButton;
     
     int m_showCase = 0;
     

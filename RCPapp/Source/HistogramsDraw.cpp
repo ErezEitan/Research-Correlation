@@ -25,8 +25,7 @@ void HistogramsDraw::InitHistogramDraw()
     InitHistogramsWight();
     CalculateHistogramBars();
 
-    addAndMakeVisible (demoComp);
-    demoComp.addMouseListener(this, true);
+    InitHistogramsShowRadioButton();
     repaint();
 }
 
@@ -76,6 +75,22 @@ void HistogramsDraw::InitHistogramsWight()
                 addAndMakeVisible(*m_vHistogramBars[j][i]);
             }
         }
+    }
+}
+
+//==============================================================================
+void HistogramsDraw::InitHistogramsShowRadioButton()
+//==============================================================================
+{
+    if (0 != m_numOfBars)
+    {
+        addAndMakeVisible (m_selectedHistogramRadioButton);
+        m_selectedHistogramRadioButton.addMouseListener(this, true);
+        m_selectedHistogramRadioButton.SetButtonText(0, "Red");
+        m_selectedHistogramRadioButton.SetButtonText(1, "Aqua");
+        m_selectedHistogramRadioButton.SetButtonText(2, "Green");
+        m_selectedHistogramRadioButton.SetButtonText(3, "Yellow");
+        m_selectedHistogramRadioButton.SetButtonText(4, "All");
     }
 }
 
@@ -144,7 +159,7 @@ void HistogramsDraw::resized()
     
     auto area = getLocalBounds();
     area.setBounds(0, 0, area.getWidth(), 15);
-    demoComp.setBounds (area);
+    m_selectedHistogramRadioButton.setBounds (area);
 }
 
 //==============================================================================
@@ -173,14 +188,14 @@ void HistogramsDraw::paint (Graphics& g)
 void HistogramsDraw::mouseUp(const MouseEvent& e)
 //==============================================================================
 {
-    for(auto& inRadio : demoComp.radioButtons)
+    for(auto& inRadio : m_selectedHistogramRadioButton.m_radioButtons)
     {
         if (inRadio == e.eventComponent)
         {
             m_areaHistogramDevided = 4.0f;
             m_histogramsMultiple = 1.0f;
             bool bShowAll = false;
-            int index = demoComp.GetCurrentIndex();
+            int index = m_selectedHistogramRadioButton.GetCurrentIndex();
             switch (index)
             {
                 case 4:

@@ -85,7 +85,8 @@ void HistogramsDraw::InitHistogramsShowRadioButton()
     if (0 != m_numOfBars)
     {
         addAndMakeVisible (m_selectedHistogramRadioButton);
-        m_selectedHistogramRadioButton.addMouseListener(this, true);
+        m_selectedHistogramRadioButton.AddListener(this);
+
         m_selectedHistogramRadioButton.SetButtonText(0, "Red");
         m_selectedHistogramRadioButton.SetButtonText(1, "Aqua");
         m_selectedHistogramRadioButton.SetButtonText(2, "Green");
@@ -168,61 +169,62 @@ void HistogramsDraw::paint (Graphics& g)
 {
     if (!m_vborderPath.empty())
     {
+      /*
+        int index = m_selectedHistogramRadioButton.GetCurrentIndex();
         for (int i = 0; i < eNumberOfHistogramColors; ++i)
         {
+            if(i != index && index != 4)
+                continue;
             int border = m_rcpHeaderDescriptor.m_vBorderLineHistogram[i];
             Rectangle<float> histogramLineArea = m_vLineOfHistogramAxisX[i]->getBounds().toFloat();
             
             Rectangle<float> borderArea;
-            
             borderArea.setY((histogramLineArea.getY() + (histogramLineArea.getHeight() / 2)) - border * m_histogramBarHightInPixel);
             borderArea.setWidth(histogramLineArea.getWidth());
-            borderArea.setHeight(20);
+            borderArea.setHeight(2);
             
-            g.drawLine(borderArea.getX(), borderArea.getY(), borderArea.getWidth(), borderArea.getY());
+            Path p;
+            p.addRectangle(borderArea);
+            g.fillPath (p);
+            repaint();
         }
+       */
     }
 }
 
-//=============================================================================
-void HistogramsDraw::mouseUp(const MouseEvent& e)
-//==============================================================================
+//============================================
+void HistogramsDraw::buttonClicked (Button* in)
+//============================================
 {
-    for(auto& inRadio : m_selectedHistogramRadioButton.m_radioButtons)
+    bool bShowAll = false;
+    int index = ((RadioButtonText*)in)->GetCurrentIndex();
+    
+    switch (index)
     {
-        if (inRadio == e.eventComponent)
-        {
-            bool bShowAll = false;
-            int index = m_selectedHistogramRadioButton.GetCurrentIndex();
+        case 4:
+            m_areaHistogramDevided = 4.0f;
+            m_histogramsMultiple = 1.0f;
+            bShowAll = true;
+            break;
             
-            switch (index)
-            {
-                case 4:
-                    m_areaHistogramDevided = 4.0f;
-                    m_histogramsMultiple = 1.0f;
-                    bShowAll = true;
-                    break;
-                    
-                default:
-                    m_areaHistogramDevided = 1.0f;
-                    m_histogramsMultiple = 0.0f;
-                    break;
-            }
-            
-            for (int i = 0; i < eNumberOfHistogramColors; ++i)
-            {
-                m_vLineOfHistogramAxisX[i]->setVisible(i == index|| bShowAll);
-                m_vLineOfHistogramAxisY[i]->setVisible(i == index|| bShowAll);
-                for (int j = 0; j < m_numOfBars; ++j)
-                {
-                    m_vHistogramBars[i][j]->setVisible(i == index|| bShowAll);
-                }
-                
-            }
-            
-            resized();
-        }
+        default:
+            m_areaHistogramDevided = 1.0f;
+            m_histogramsMultiple = 0.0f;
+            break;
     }
+    
+    for (int i = 0; i < eNumberOfHistogramColors; ++i)
+    {
+        m_vLineOfHistogramAxisX[i]->setVisible(i == index|| bShowAll);
+        m_vLineOfHistogramAxisY[i]->setVisible(i == index|| bShowAll);
+        for (int j = 0; j < m_numOfBars; ++j)
+        {
+            m_vHistogramBars[i][j]->setVisible(i == index|| bShowAll);
+        }
+        
+    }
+    
+    resized();
 }
 
 

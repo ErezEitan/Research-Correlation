@@ -42,7 +42,7 @@ private:
 
 
 
-class HistogramsDraw  : public BaseComponentControl
+class HistogramsDraw  : public BaseComponentControl , public Button::Listener
 {
 public:
     //==============================================================================
@@ -50,7 +50,7 @@ public:
     : BaseComponentControl(in_mainComponent)
     , m_vBarDescriptors(in_barDesriptors)
     , m_rcpHeaderDescriptor(in_rcpHeaderDescriptor)
-    , m_selectedHistogramRadioButton(in_mainComponent, 5, 42)
+    , m_selectedHistogramRadioButton(5, 42)
     {
         m_controlName = "HistogramsDraw";
     }
@@ -68,7 +68,8 @@ public:
     //==============================================================================
     void resized() override;
     void paint (Graphics& g) override;
-    void mouseUp(const MouseEvent& e) override;
+    void buttonClicked (Button*) override;
+    
 private:
 
     size_t m_numOfBars = 0;

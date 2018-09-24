@@ -13,20 +13,40 @@
 #include <stdio.h>
 #include "BaseComponentControl.h"
 
-
 //==============================================================================
-class RadioButtons  : public BaseComponentControl
+class RadioButtonText  : public TextButton
 {
 public:
-    RadioButtons(MainComponent* in_mainComponent, const int in_numberOfButtons, const int in_groupNumber);
-    
+    RadioButtonText();
+    RadioButtonText(const String in_buttonName, const int in_index)
+    : TextButton(in_buttonName)
+    {
+        m_index = in_index;
+    }
+    virtual ~RadioButtonText(){;}
+    void SetRadioButtonIndex(const int in_index) {m_index = in_index;}
+    void SetButtonText (String& in_buttonName) { setButtonText (in_buttonName);}
+    int GetCurrentIndex() { return m_index; }
+
+private:
+    int m_index = 0;
+};
+
+
+//==============================================================================
+class RadioButtons  : public Button
+{
+public:
+    RadioButtons(const int in_numberOfButtons, const int in_groupNumber);
+    virtual ~RadioButtons(){;}
     void UpdateToggleState (Button* button, int in_index);
     void SetButtonText (const int in_index, String in_buttonName);
     int GetCurrentIndex() { return m_currentIndex; }
-    
+    void AddListener(Listener* in);
+    void paintButton (Graphics& g, bool isMouseOverButton, bool isButtonDown) override;
     void resized() override;
     
-    OwnedArray<TextButton> m_radioButtons;
+    OwnedArray<RadioButtonText> m_radioButtons;
     int m_currentIndex = 0;
 };
 

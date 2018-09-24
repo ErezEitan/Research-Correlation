@@ -37,7 +37,6 @@ public:
     {
         g.setColour(Colours::orange);
         auto area = getLocalBounds().reduced(1);
-        g.drawRoundedRectangle(area.toFloat(), 2.0f, 2.0f);
         g.fillRect(area);
         g.setColour(findColour(TextButton::textColourOffId));
         g.drawFittedText(m_barName, area, Justification::centredLeft, 1);
@@ -59,10 +58,27 @@ public:
         
         m_barName = "Bar: " + std::to_string(m_barIndex);
     }
+
+    void SetLength(const float in_length)
+    {
+        m_barLength = in_length;
+    }
+    
+    void SetAxisX(const int in_axisX)
+    {
+        m_axisX = in_axisX;
+    }
+    
+    int GetAxisX()
+    {
+        return m_axisX;
+    }
     
 private:
     int m_sizeOfBarInPixel = 0;
     int m_barIndex = -1;
+    int m_axisX = 0;
+    float m_barLength = 0.0f;
     std::string m_barName;
     Rectangle<int> m_barRectangle;
     BarDescriptorStruct m_barDescriptor;
@@ -71,7 +87,7 @@ private:
 };
 
 
-class BarAndLine  : public BaseComponentControl
+class BarAndLine : public BaseComponentControl,  public Button::Listener
 {
 public:
     BarAndLine(MainComponent* in_mainComponent);
@@ -81,8 +97,8 @@ public:
     void resized() override;
     void mouseDrag(const MouseEvent& e) override;
     void mouseDown(const MouseEvent& e) override;
-    void mouseUp(const MouseEvent& e);
     virtual void Callback(const String in_msg, void* /*in_data*/) override;
+    void buttonClicked (Button* in) override;
     
 protected:
     void InitBarsDrawArea();

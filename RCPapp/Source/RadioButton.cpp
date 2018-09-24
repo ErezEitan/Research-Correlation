@@ -9,15 +9,13 @@
 #include "RadioButton.h"
 
 //==============================================================================
-RadioButtons::RadioButtons(MainComponent* in_mainComponent, const int in_numberOfButtons, const int in_groupNumber)
-: BaseComponentControl(in_mainComponent)
+RadioButtons::RadioButtons(const int in_numberOfButtons, const int in_groupNumber)
+    : Button("RadioButton")
 //==============================================================================
 {
-    m_controlName = "HistogramsBar";
-    
     for (int i = 0; i < in_numberOfButtons; ++i)
     {
-        auto* b = m_radioButtons.add (new TextButton ("Button " + String (i + 1)));
+        auto* b = m_radioButtons.add (new RadioButtonText ("Button " + String (i + 1), i));
         
         addAndMakeVisible (b);
         b->setRadioGroupId (in_groupNumber);
@@ -27,6 +25,12 @@ RadioButtons::RadioButtons(MainComponent* in_mainComponent, const int in_numberO
         setConncected += (i * Button::ConnectedOnRight);
         b->setConnectedEdges (setConncected);
     }
+}
+
+//==============================================================================
+void RadioButtons::paintButton (Graphics& /*g*/, bool /*isMouseOverButton*/, bool /*isButtonDown*/)
+//==============================================================================
+{
 }
 
 //==============================================================================
@@ -47,6 +51,16 @@ void RadioButtons::SetButtonText (const int in_index, String in_buttonName)
     if(in_index < m_radioButtons.size())
     {
         m_radioButtons[in_index]->setButtonText(in_buttonName);
+    }
+}
+
+//===========================
+void RadioButtons::AddListener(Listener* in)
+//===========================
+{
+    for(auto& r : m_radioButtons)
+    {
+        r->addListener(in);
     }
 }
 

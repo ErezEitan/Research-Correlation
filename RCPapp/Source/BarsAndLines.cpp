@@ -16,7 +16,7 @@ BarAndLine::BarAndLine(MainComponent* in_mainComponent)
     : BaseComponentControl(in_mainComponent)
     , m_lineAxisX(in_mainComponent)
     , m_lineAxisY(in_mainComponent)
-    , m_selectedBarOrHistogramRadioButton(in_mainComponent, 3, 44)
+    , m_selectedBarOrHistogramRadioButton(3, 44)
 //==============================================================================
 {
     m_controlName = "BarAndLine";
@@ -75,7 +75,17 @@ void BarAndLine::resized()
         CalculateBarsDrawArea();
         CalculateOneBarPixel();
         CalculateLinesBarsDrawPoints();
-        SetHightAndWidthForBars();
+        
+        for (int i = 0; i < m_vBars.size(); ++i)
+        {
+            float axisX = m_vBars[i]->GetAxisX() * m_barWidthInPixel;
+            auto area = m_vBars[i]->getBounds();
+            area.setX(axisX);
+            area.setY((i * m_barHightInPixel + 30));
+            m_vBars[i]->setBounds(area);
+            m_vBars[i]->setSize(m_vBars[i]->GetBarDescriptor().m_barLength * m_barWidthInPixel, m_barHightInPixel);
+        }
+       // SetHightAndWidthForBars();
         CalculateHistogramDraw();
         
         repaint();
@@ -128,7 +138,7 @@ void BarAndLine::InitShowRadioButton()
 //==============================================================================
 {
     addAndMakeVisible (m_selectedBarOrHistogramRadioButton);
-    m_selectedBarOrHistogramRadioButton.addMouseListener(this, true);
+    m_selectedBarOrHistogramRadioButton.AddListener(this);
     m_selectedBarOrHistogramRadioButton.SetButtonText(0, "All");
     m_selectedBarOrHistogramRadioButton.SetButtonText(1, "Bars");
     m_selectedBarOrHistogramRadioButton.SetButtonText(2, "Histograms");
@@ -218,6 +228,8 @@ void BarAndLine::SetHightAndWidthForBars()
                     Rectangle<float> newBarBounds = m_vBars[barAfterMe]->getBounds().toFloat();
                     newBarBounds.setX(newAxisX);
                     m_vBars[barAfterMe]->setBounds(newBarBounds.toNearestInt());
+                    int axisX = (m_lineAxisX.getWidth() - newBarBounds.getX()) / m_barWidthInPixel;
+                    m_vBars[barAfterMe]->SetAxisX(m_vBars.size() - axisX);
                 }
             }
         }
@@ -233,11 +245,47 @@ void BarAndLine::CalculateShowRadioButton()
     m_selectedBarOrHistogramRadioButton.setBounds (area);
 }
 
-//==============================================================================
+//===================================================================
 void BarAndLine::CalculateHistogramDraw()
-//==============================================================================
+//===================================================================
 {
     m_histogramsDraw->setBounds(m_areaForHistograms.toNearestInt());
+}
+
+//============================================
+void BarAndLine::buttonClicked (Button* in)
+//============================================
+{
+    int index = ((RadioButtonText*)in)->GetCurrentIndex();
+    m_showCase = index;
+    bool show = (index == 1 || index == 0) ? true : false;
+    m_lineAxisX.setVisible(show);
+    m_lineAxisY.setVisible(show);
+    
+    for(auto& bar : m_vBars)
+    {
+        bar->setVisible(show);
+    }
+    
+    m_histogramsDraw->setVisible(!show || index == 0);
+    
+    switch (index)
+    {
+        case 0:
+        case 1:
+        {
+            InitBarsDrawArea();
+        }
+            break;
+            
+        case 2:
+        {
+            m_areaForBars.setBottom(0);
+        }
+            break;
+    }
+    
+    resized();
 }
 
 //==============================================================================
@@ -285,49 +333,6 @@ void BarAndLine::paint (Graphics& g)
  
 }
 
-//=============================================================================
-void BarAndLine::mouseUp(const MouseEvent& e)
-//==============================================================================
-{
-    for(auto& inRadio : m_selectedBarOrHistogramRadioButton.m_radioButtons)
-    {
-        if (inRadio == e.eventComponent)
-        {
-            int index = m_selectedBarOrHistogramRadioButton.GetCurrentIndex();
-            m_showCase = index;
-            bool show = (index == 1 || index == 0) ? true : false;
-            m_lineAxisX.setVisible(show);
-            m_lineAxisY.setVisible(show);
-            
-            for(auto& bar : m_vBars)
-            {
-                bar->setVisible(show);
-            }
-            
-            m_histogramsDraw->setVisible(!show || index == 0);
-            
-            switch (index)
-            {
-                case 0:
-                case 1:
-                {
-                    InitBarsDrawArea();
-                }
-                break;
-                    
-                case 2:
-                {
-                    m_areaForBars.setBottom(0);
-                }
-                break;
-            }
-            
-            resized();
-            break;
-        }
-    }
-}
-
 //==============================================================================
 void BarAndLine::mouseDown(const MouseEvent& e)
 //==============================================================================
@@ -361,17 +366,25 @@ void BarAndLine::mouseDrag(const MouseEvent& e)
                 BarDescriptorStruct barDescriptor = pBarComponent->GetBarDescriptor();
                 Rectangle<float> areaBarBeforeMe = GetTheAreaLimiterFromBarsBeforeMe(barDescriptor.m_vWhichBarBeforeMe);
                 Rectangle<float> areaBarAfterMe = GetTheAreaLimiterFromBarsAfterMe(barDescriptor.m_vWhichBarAfterMe);
+                if(deltaDrag.getX() < 0)
+                {
+                    if((area.getRight() - deltaDrag.getX()) < areaBarAfterMe.getX() - 1)
+                    {
+                        area.setX(area.getX() - deltaDrag.getX());
+                        e.eventComponent->setBounds(area.toNearestInt());
+                    }
+                }
+                else
+                {
+                    if((area.getX() - deltaDrag.getX()) > areaBarBeforeMe.getRight())
+                    {
+                        area.setX(area.getX() - deltaDrag.getX());
+                        e.eventComponent->setBounds(area.toNearestInt());
+                    }
+                }
                 
-                if((area.getX() - deltaDrag.getX()) > areaBarBeforeMe.getRight())
-                {
-                    area.setX(area.getX() - deltaDrag.getX());
-                    e.eventComponent->setBounds(area.toNearestInt());
-                }
-                else if((area.getX() - deltaDrag.getX()) < areaBarAfterMe.getX())
-                {
-                    area.setX(area.getX() - deltaDrag.getX());
-                    e.eventComponent->setBounds(area.toNearestInt());
-                }
+                int axisX = (m_lineAxisX.getWidth() - area.getX()) / m_barWidthInPixel;
+                pBarComponent->SetAxisX(m_vBars.size() - axisX);
             }
         }
     }
@@ -387,7 +400,7 @@ Rectangle<float> BarAndLine::GetTheAreaLimiterFromBarsBeforeMe(const std::vector
     for(int i = 0; i < in_vWhichBarBeforeMe.size(); ++i)
     {
         Rectangle<float> areaBarBeforeMe = m_vBars[in_vWhichBarBeforeMe[i]]->getBounds().toFloat();
-        if(areaRetVal.getRight() < areaBarBeforeMe.getX())
+        if(areaRetVal.getRight() < areaBarBeforeMe.getRight())
         {
             areaRetVal = areaBarBeforeMe;
         }
@@ -400,11 +413,11 @@ Rectangle<float> BarAndLine::GetTheAreaLimiterFromBarsBeforeMe(const std::vector
 Rectangle<float> BarAndLine::GetTheAreaLimiterFromBarsAfterMe(const std::vector<int32_t>& in_vWhichBarAfterMe)
 //==================================================================================================
 {
-    Rectangle<float> areaRetVal(0.0f,0.0f,0.0f,0.0f);
+    Rectangle<float> areaRetVal(getBounds().getRight(),0.0f,0.0f,0.0f);
     for(int i = 0; i < in_vWhichBarAfterMe.size(); ++i)
     {
         Rectangle<float> areaBarAfterMe = m_vBars[in_vWhichBarAfterMe[i]]->getBounds().toFloat();
-        if(areaRetVal.getX() < areaBarAfterMe.getRight())
+        if(areaRetVal.getX() > areaBarAfterMe.getX())
         {
             areaRetVal = areaBarAfterMe;
         }

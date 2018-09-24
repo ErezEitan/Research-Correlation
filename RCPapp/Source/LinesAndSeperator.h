@@ -22,7 +22,7 @@ enum DirectionDrawLine
 };
     
 };
-class LinesDraw: public BaseComponentControl
+class LinesDraw : public BaseComponentControl
 {
 public:
     LinesDraw(MainComponent* in_mainComponent): BaseComponentControl(in_mainComponent){;}

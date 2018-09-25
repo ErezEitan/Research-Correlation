@@ -43,10 +43,10 @@ void HistogramsDraw::InitHistogramsLines()
         m_vLineOfHistogramAxisY.push_back(std::make_shared<LinesDraw>(m_pMainCompenent));
         
         m_vLineOfHistogramAxisX[i]->SetDirection(LineDraw::eHorizontal);
-        m_vLineOfHistogramAxisX[i]->SetColor(ColorsForHistograms[i]);
+        m_vLineOfHistogramAxisX[i]->SetColor(m_histogramColors.m_vHistogramColors[i]);
         
         m_vLineOfHistogramAxisY[i]->SetDirection(LineDraw::eVertical);
-        m_vLineOfHistogramAxisY[i]->SetColor(ColorsForHistograms[i]);
+        m_vLineOfHistogramAxisY[i]->SetColor(m_histogramColors.m_vHistogramColors[i]);
         m_vLineOfHistogramAxisY[i]->CountBackword(true);
         
         addAndMakeVisible(*m_vLineOfHistogramAxisX[i]);

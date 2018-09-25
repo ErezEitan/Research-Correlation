@@ -13,12 +13,16 @@ enum HistogramColor
     eNumberOfHistogramColors
 };
 
-const Colour ColorsForHistograms[eNumberOfHistogramColors] = {
-    Colours::red,
-    Colours::aqua,
-    Colours::green,
-    Colours::yellow
+struct ColorsForHistograms
+{
+    std::vector<Colour> m_vHistogramColors = {
+        Colours::red,
+        Colours::aqua,
+        Colours::green,
+        Colours::yellow
+    };
 };
+
 
 enum eRCP_Descriptor
 {

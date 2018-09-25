@@ -88,7 +88,8 @@ private:
     RCPHeaderDescriptor& m_rcpHeaderDescriptor;
 
     RadioButtons m_selectedHistogramRadioButton;
-
+    ColorsForHistograms m_histogramColors;
+    
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (HistogramsDraw)
 };
 

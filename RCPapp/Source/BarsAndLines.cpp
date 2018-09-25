@@ -9,7 +9,14 @@
 #include "BarsAndLines.h"
 #include "MainComponent.h"
 
-//const int kOffsetReducedFromMainArea = 30;
+const float kOffsetFromMainArea = 30.0f;
+const float kLineWidthAndHight = 30.0f;
+enum eShowButton
+{
+    eShowButton_All,
+    eShowButton_Bars,
+    eShowButton_Histograms
+};
 
 //==============================================================================
 BarAndLine::BarAndLine(MainComponent* in_mainComponent)
@@ -75,17 +82,7 @@ void BarAndLine::resized()
         CalculateBarsDrawArea();
         CalculateOneBarPixel();
         CalculateLinesBarsDrawPoints();
-        
-        for (int i = 0; i < m_vBars.size(); ++i)
-        {
-            float axisX = m_vBars[i]->GetAxisX() * m_barWidthInPixel;
-            auto area = m_vBars[i]->getBounds();
-            area.setX(axisX);
-            area.setY((i * m_barHightInPixel + 30));
-            m_vBars[i]->setBounds(area);
-            m_vBars[i]->setSize(m_vBars[i]->GetBarDescriptor().m_barLength * m_barWidthInPixel, m_barHightInPixel);
-        }
-       // SetHightAndWidthForBars();
+        CalculateHightAndWidthForBars();
         CalculateHistogramDraw();
         
         repaint();
@@ -98,7 +95,7 @@ void BarAndLine::InitBarsDrawArea()
 {
     Rectangle<float> area = getLocalBounds().toFloat();
     area.reduce(15.0f, 0.0f);
-    area.setTop(area.getY() + 30);
+    area.setTop(area.getY() + kOffsetFromMainArea);
     m_areaForHistograms = area;
     float reduce = (area.getHeight() * 0.5f);
     area.setBottom(area.getBottom() - reduce - m_factor);
@@ -124,12 +121,52 @@ void BarAndLine::InitBars()
             m_vBars[i]->addMouseListener(this, false);
             addAndMakeVisible(*m_vBars[i]);
             
-            Rectangle<float> barBounds(m_lineAxisY.getX() * 2.0f, (i * m_barHightInPixel) + 30, m_barWidthInPixel * vBarDescriptor[i]->m_barLength, m_barHightInPixel);
+            Rectangle<float> barBounds(m_lineAxisY.getX() * 2.0f, (i * m_barHightInPixel) + kOffsetFromMainArea, m_barWidthInPixel * vBarDescriptor[i]->m_barLength, m_barHightInPixel);
             m_vBars[i]->setBounds(barBounds.toNearestInt());
             m_vBars[i]->SetBarDescriptor(*vBarDescriptor[i]);
         }
         
-        SetHightAndWidthForBars();
+        InitHightAndWidthForBars();
+    }
+}
+
+//==============================================================================
+void BarAndLine::InitHightAndWidthForBars()
+//==============================================================================
+{
+    
+    if(m_rcpDescriptors.IsFileOpen())
+    {
+        if (0 != m_numOfBars)
+        {
+            for (int i = 0; i < m_vBars.size(); ++i)
+            {
+                m_vBars[i]->setSize(m_vBars[i]->GetBarDescriptor().m_barLength * m_barWidthInPixel, m_barHightInPixel);
+            }
+            
+            Rectangle<float> curBarBounds;
+            Rectangle<float> newBarBounds;
+            int barAfterMe = 0;
+            float newAxisX = 0.0f;
+            int indexOnAxisX = 0;
+            
+            for (int cur = 0; cur < m_vBars.size(); ++cur)
+            {
+                curBarBounds = m_vBars[cur]->getBounds().toFloat();
+                curBarBounds.setY((cur * m_barHightInPixel + kOffsetFromMainArea));
+                m_vBars[cur]->setBounds(curBarBounds.toNearestInt());
+                for (int barAfterMeIndex = 0; barAfterMeIndex < m_vBars[cur]->GetBarDescriptor().m_vWhichBarAfterMe.size(); ++barAfterMeIndex)
+                {
+                    barAfterMe = m_vBars[cur]->GetBarDescriptor().m_vWhichBarAfterMe[barAfterMeIndex];
+                    newAxisX = m_vBars[cur]->getBounds().toFloat().getX() + m_vBars[cur]->GetBarDescriptor().m_barLength * m_barWidthInPixel;
+                    newBarBounds = m_vBars[barAfterMe]->getBounds().toFloat();
+                    newBarBounds.setX(newAxisX);
+                    m_vBars[barAfterMe]->setBounds(newBarBounds.toNearestInt());
+                    indexOnAxisX = (m_lineAxisX.getRight() + 15 - newBarBounds.getX()) / m_barWidthInPixel;
+                    m_vBars[barAfterMe]->SetAxisX(m_vBars.size() - indexOnAxisX);
+                }
+            }
+        }
     }
 }
 
@@ -163,7 +200,7 @@ void BarAndLine::CalculateBarsDrawArea()
     
     switch (m_showCase)
     {
-        case 0:
+        case eShowButton_All:
             m_areaForBars.setWidth(area.getWidth());
             m_areaForBars.setBottom(m_areaForBars.getBottom() - m_factor);
             m_areaForHistograms.setWidth(area.getWidth());
@@ -171,12 +208,12 @@ void BarAndLine::CalculateBarsDrawArea()
             m_areaForHistograms.setTop(m_areaForBars.getBottom() + 15);
             break;
           
-        case 1:
+        case eShowButton_Bars:
             m_areaForBars.setWidth(area.getWidth());
             m_areaForBars.setBottom(area.getBottom() - m_factor - 15.0f);
             break;
             
-        case 2:
+        case eShowButton_Histograms:
             m_areaForHistograms.setWidth(area.getWidth());
             m_areaForHistograms.setBottom(area.getBottom());
             m_areaForHistograms.setTop(m_areaForBars.getBottom() + 15);
@@ -191,47 +228,32 @@ void BarAndLine::CalculateBarsDrawArea()
 void BarAndLine::CalculateLinesBarsDrawPoints()
 //==============================================================================
 {
-    Rectangle<float> areaLineDrawHorizontal(m_areaForBars.getX(), m_areaForBars.getBottom() - 15.0f, m_areaForBars.getWidth(), 30.0f);
+    Rectangle<float> areaLineDrawHorizontal(m_areaForBars.getX(), m_areaForBars.getBottom() - 15.0f, m_areaForBars.getWidth(), kLineWidthAndHight);
     m_lineAxisX.setBounds(areaLineDrawHorizontal.toNearestInt());
     m_lineAxisX.SetNumberOfSepertors(m_numOfBars);
     m_lineAxisX.resized();
     
-    Rectangle<float> areaLineDrawVertical(m_areaForBars.getX(), m_areaForBars.getTopLeft().getY(), 30.0f, m_areaForBars.getHeight());
+    Rectangle<float> areaLineDrawVertical(m_areaForBars.getX(), m_areaForBars.getTopLeft().getY(), kLineWidthAndHight, m_areaForBars.getHeight());
     m_lineAxisY.setBounds(areaLineDrawVertical.toNearestInt());
     m_lineAxisY.SetNumberOfSepertors(m_numOfBars);
     m_lineAxisY.resized();
 }
 
 //==============================================================================
-void BarAndLine::SetHightAndWidthForBars()
+void BarAndLine::CalculateHightAndWidthForBars()
 //==============================================================================
 {
     
     if(m_rcpDescriptors.IsFileOpen())
     {
-        if (0 != m_numOfBars)
+        for (int i = 0; i < m_vBars.size(); ++i)
         {
-            for (int i = 0; i < m_vBars.size(); ++i)
-            {
-                m_vBars[i]->setSize(m_vBars[i]->GetBarDescriptor().m_barLength * m_barWidthInPixel, m_barHightInPixel);
-            }
-            
-            for (int cur = 0; cur < m_vBars.size(); ++cur)
-            {
-                Rectangle<float> curBarBounds = m_vBars[cur]->getBounds().toFloat();
-                curBarBounds.setY((cur * m_barHightInPixel + 30));
-                m_vBars[cur]->setBounds(curBarBounds.toNearestInt());
-                for (int j = 0; j < m_vBars[cur]->GetBarDescriptor().m_vWhichBarAfterMe.size(); ++j)
-                {
-                    int barAfterMe = m_vBars[cur]->GetBarDescriptor().m_vWhichBarAfterMe[j];
-                    float newAxisX = m_vBars[cur]->getBounds().toFloat().getX() + m_vBars[cur]->GetBarDescriptor().m_barLength * m_barWidthInPixel;
-                    Rectangle<float> newBarBounds = m_vBars[barAfterMe]->getBounds().toFloat();
-                    newBarBounds.setX(newAxisX);
-                    m_vBars[barAfterMe]->setBounds(newBarBounds.toNearestInt());
-                    int axisX = (m_lineAxisX.getWidth() - newBarBounds.getX()) / m_barWidthInPixel;
-                    m_vBars[barAfterMe]->SetAxisX(m_vBars.size() - axisX);
-                }
-            }
+            float axisX = m_vBars[i]->GetAxisX() * m_barWidthInPixel + kOffsetFromMainArea;
+            auto area = m_vBars[i]->getBounds();
+            area.setX(axisX);
+            area.setY((i * m_barHightInPixel + kOffsetFromMainArea));
+            m_vBars[i]->setBounds(area);
+            m_vBars[i]->setSize(m_vBars[i]->GetBarDescriptor().m_barLength * m_barWidthInPixel, m_barHightInPixel);
         }
     }
 }
@@ -258,7 +280,7 @@ void BarAndLine::buttonClicked (Button* in)
 {
     int index = ((RadioButtonText*)in)->GetCurrentIndex();
     m_showCase = index;
-    bool show = (index == 1 || index == 0) ? true : false;
+    bool show = (index == eShowButton_Bars || index == eShowButton_All) ? true : false;
     m_lineAxisX.setVisible(show);
     m_lineAxisY.setVisible(show);
     
@@ -267,60 +289,22 @@ void BarAndLine::buttonClicked (Button* in)
         bar->setVisible(show);
     }
     
-    m_histogramsDraw->setVisible(!show || index == 0);
+    m_histogramsDraw->setVisible(!show || index == eShowButton_All);
     
     switch (index)
     {
-        case 0:
-        case 1:
-        {
-            InitBarsDrawArea();
-        }
-            break;
-            
-        case 2:
-        {
-            m_areaForBars.setBottom(0);
-        }
-            break;
-    }
-    
-    resized();
-}
-
-//==============================================================================
-void BarAndLine::ShowHandle(const int in_handle)
-//==============================================================================
-{
-    m_showCase = in_handle;
-    bool show = (in_handle == 1 || in_handle == 0) ? true : false;
-    m_lineAxisX.setVisible(show);
-    m_lineAxisY.setVisible(show);
-    
-    for(auto& bar : m_vBars)
-    {
-        bar->setVisible(show);
-    }
-    
-    m_histogramsDraw->setVisible(!show || in_handle == 0);
-    
-    switch (in_handle)
-    {
-        case 0:
-        case 1:
+        case eShowButton_All:
+        case eShowButton_Bars:
         {
             InitBarsDrawArea();
         }
         break;
             
-        case 2:
+        case eShowButton_Histograms:
         {
             m_areaForBars.setBottom(0);
         }
         break;
-            
-        default:
-            break;
     }
     
     resized();
@@ -383,7 +367,7 @@ void BarAndLine::mouseDrag(const MouseEvent& e)
                     }
                 }
                 
-                int axisX = (m_lineAxisX.getWidth() - area.getX()) / m_barWidthInPixel;
+                float axisX = (m_lineAxisX.getRight() + 15 - area.getX()) / m_barWidthInPixel;
                 pBarComponent->SetAxisX(m_vBars.size() - axisX);
             }
         }

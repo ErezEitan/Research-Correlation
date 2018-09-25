@@ -103,9 +103,9 @@ public:
 protected:
     void InitBarsDrawArea();
     void InitBars();
+    void InitHightAndWidthForBars();
     void InitHistogramDraw();
     void InitShowRadioButton();
-    void ShowHandle(const int in_handle);
     
 private:
     // Your private member variables go here...
@@ -114,8 +114,7 @@ private:
     void CalculateOneBarPixel();
     void CalculateBarsDrawArea();
     void CalculateLinesBarsDrawPoints();
-    void SetHightAndWidthForBars();
-    
+    void CalculateHightAndWidthForBars();
     void CalculateHistogramDraw();
     void CalculateShowRadioButton();
     

@@ -9,6 +9,16 @@
 #include "HistogramsDraw.h"
 #include "RCP_DescriptorsConsts.h"
 
+enum eShowButton
+{
+    eShowHistogramButton_All,
+    eShowHistogramButton_RedHistogram,
+    eShowHistogramButton_AquaHistogram,
+    eShowHistogramButton_GreenHistogram,
+    eShowHistogramButton_YellowHistogram
+};
+
+
 //==============================================================================
 void HistogramsDraw::InitHistogramDraw()
 //==============================================================================
@@ -24,7 +34,8 @@ void HistogramsDraw::InitHistogramDraw()
     
     InitHistogramsWight();
     CalculateHistogramBars();
-
+    CalculateHistogramBorderLine();
+    
     InitHistogramsShowRadioButton();
     repaint();
 }
@@ -51,8 +62,6 @@ void HistogramsDraw::InitHistogramsLines()
         
         addAndMakeVisible(*m_vLineOfHistogramAxisX[i]);
         addAndMakeVisible(*m_vLineOfHistogramAxisY[i]);
-        
-        m_vborderPath.push_back(Path());
     }
 }
 
@@ -87,11 +96,11 @@ void HistogramsDraw::InitHistogramsShowRadioButton()
         addAndMakeVisible (m_selectedHistogramRadioButton);
         m_selectedHistogramRadioButton.AddListener(this);
 
-        m_selectedHistogramRadioButton.SetButtonText(0, "Red");
-        m_selectedHistogramRadioButton.SetButtonText(1, "Aqua");
-        m_selectedHistogramRadioButton.SetButtonText(2, "Green");
-        m_selectedHistogramRadioButton.SetButtonText(3, "Yellow");
-        m_selectedHistogramRadioButton.SetButtonText(4, "All");
+        m_selectedHistogramRadioButton.SetButtonText(0, "All");
+        m_selectedHistogramRadioButton.SetButtonText(1, "Red");
+        m_selectedHistogramRadioButton.SetButtonText(2, "Aqua");
+        m_selectedHistogramRadioButton.SetButtonText(3, "Green");
+        m_selectedHistogramRadioButton.SetButtonText(4, "Yellow");
     }
 }
 
@@ -112,7 +121,8 @@ void HistogramsDraw::CalculateHistogramLinesDrawPoints()
             m_vLineOfHistogramAxisX[i]->SetNumberOfSepertors(m_numOfBars);
             m_vLineOfHistogramAxisX[i]->resized();
             
-            Rectangle<float> areaLineDrawVertical(localBounds.getX(), localBounds.getBottom() - (areaHightForHistogram * i)  * (m_histogramsMultiple) - areaHightForHistogram, 30.0f, areaHightForHistogram);
+            float horizontalHightOffset = areaLineDrawHorizontal.getHeight() * 0.5f;
+            Rectangle<float> areaLineDrawVertical(localBounds.getX(), localBounds.getBottom() - (areaHightForHistogram * i)  * (m_histogramsMultiple) - areaHightForHistogram - horizontalHightOffset, 30.0f, areaHightForHistogram);
             m_vLineOfHistogramAxisY[i]->setBounds(areaLineDrawVertical.toNearestInt());
             m_vLineOfHistogramAxisY[i]->SetNumberOfSepertors(m_numOfBars);
             m_vLineOfHistogramAxisY[i]->resized();
@@ -138,9 +148,9 @@ void HistogramsDraw::CalculateHistogramBars()
                 
                 Rectangle<float> histogramBounds;
                 histogramBounds.setY(lineXHistogramBounds.getY());
-                histogramBounds.setX((lineXHistogramBounds.getX() + lineXHistogramBounds.getHeight() / 2) + (i * m_histogramBarWidthInPixel));
+                histogramBounds.setX((lineXHistogramBounds.getX() + lineXHistogramBounds.getHeight() * 0.5f) + (i * m_histogramBarWidthInPixel));
                 
-                histogramBounds.setTop((lineXHistogramBounds.getY() + lineYHistogramBounds.getWidth()  / 2) - wight);
+                histogramBounds.setTop((lineXHistogramBounds.getY() + lineYHistogramBounds.getWidth()  * 0.5f) - wight);
                 histogramBounds.setHeight(wight);
                 histogramBounds.setWidth(m_histogramBarWidthInPixel);
                 
@@ -152,11 +162,38 @@ void HistogramsDraw::CalculateHistogramBars()
 }
 
 //==============================================================================
+void HistogramsDraw::CalculateHistogramBorderLine()
+//==============================================================================
+{
+    if (0 != m_numOfBars)
+    {
+        m_vborderPath.clear();
+        for (int i = 0; i < eNumberOfHistogramColors; ++i)
+        {
+            if(m_vLineOfHistogramAxisX[i]->isVisible())
+            {
+                int border = m_rcpHeaderDescriptor.m_vBorderLineHistogram[i];
+                Rectangle<float> histogramLineArea = m_vLineOfHistogramAxisX[i]->getBounds().toFloat();
+                
+                Rectangle<float> borderArea;
+                borderArea.setY((histogramLineArea.getY() + (histogramLineArea.getHeight() * 0.5f)) - border * m_histogramBarHightInPixel);
+                borderArea.setWidth(histogramLineArea.getWidth());
+                borderArea.setHeight(2);
+                m_vborderPath.addRectangle(borderArea);
+            }
+        }
+        
+        repaint();
+    }
+}
+
+//==============================================================================
 void HistogramsDraw::resized()
 //==============================================================================
 {
     CalculateHistogramLinesDrawPoints();
     CalculateHistogramBars();
+    CalculateHistogramBorderLine();
     
     auto area = getLocalBounds();
     area.setBounds(0, 0, area.getWidth(), 15);
@@ -167,29 +204,7 @@ void HistogramsDraw::resized()
 void HistogramsDraw::paint (Graphics& g)
 //==============================================================================
 {
-    if (!m_vborderPath.empty())
-    {
-      /*
-        int index = m_selectedHistogramRadioButton.GetCurrentIndex();
-        for (int i = 0; i < eNumberOfHistogramColors; ++i)
-        {
-            if(i != index && index != 4)
-                continue;
-            int border = m_rcpHeaderDescriptor.m_vBorderLineHistogram[i];
-            Rectangle<float> histogramLineArea = m_vLineOfHistogramAxisX[i]->getBounds().toFloat();
-            
-            Rectangle<float> borderArea;
-            borderArea.setY((histogramLineArea.getY() + (histogramLineArea.getHeight() / 2)) - border * m_histogramBarHightInPixel);
-            borderArea.setWidth(histogramLineArea.getWidth());
-            borderArea.setHeight(2);
-            
-            Path p;
-            p.addRectangle(borderArea);
-            g.fillPath (p);
-            repaint();
-        }
-       */
-    }
+    g.strokePath (m_vborderPath, PathStrokeType (1.0f));
 }
 
 //============================================
@@ -201,7 +216,7 @@ void HistogramsDraw::buttonClicked (Button* in)
     
     switch (index)
     {
-        case 4:
+        case eShowHistogramButton_All:
             m_areaHistogramDevided = 4.0f;
             m_histogramsMultiple = 1.0f;
             bShowAll = true;
@@ -213,6 +228,7 @@ void HistogramsDraw::buttonClicked (Button* in)
             break;
     }
     
+    index -= eShowHistogramButton_RedHistogram;
     for (int i = 0; i < eNumberOfHistogramColors; ++i)
     {
         m_vLineOfHistogramAxisX[i]->setVisible(i == index|| bShowAll);
@@ -221,7 +237,6 @@ void HistogramsDraw::buttonClicked (Button* in)
         {
             m_vHistogramBars[i][j]->setVisible(i == index|| bShowAll);
         }
-        
     }
     
     resized();

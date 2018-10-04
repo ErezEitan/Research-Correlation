@@ -11,7 +11,7 @@
 
 const float kOffsetFromMainArea = 30.0f;
 const float kLineWidthAndHight = 30.0f;
-enum eShowButton
+enum eShowHistogramButton
 {
     eShowButton_All,
     eShowButton_Bars,

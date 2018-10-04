@@ -15,15 +15,16 @@ RadioButtons::RadioButtons(const int in_numberOfButtons, const int in_groupNumbe
 {
     for (int i = 0; i < in_numberOfButtons; ++i)
     {
-        auto* b = m_radioButtons.add (new RadioButtonText ("Button " + String (i + 1), i));
+        auto* button = m_radioButtons.add (new RadioButtonText ("Button " + String (i + 1), i));
         
-        addAndMakeVisible (b);
-        b->setRadioGroupId (in_groupNumber);
-        b->setClickingTogglesState (true);
-        b->onClick = [this, i, b] { UpdateToggleState( (Button*)b, i); };
+        button->setRadioGroupId (in_groupNumber);
+        button->setClickingTogglesState (true);
+        button->onClick = [this, i, button] { UpdateToggleState( (Button*)button, i); };
         int setConncected = Button::ConnectedOnRight;
         setConncected += (i * Button::ConnectedOnRight);
-        b->setConnectedEdges (setConncected);
+        button->setConnectedEdges (setConncected);
+        
+        addAndMakeVisible (button);
     }
 }
 
@@ -37,8 +38,9 @@ void RadioButtons::paintButton (Graphics& /*g*/, bool /*isMouseOverButton*/, boo
 void RadioButtons::UpdateToggleState (Button* button, int in_index)
 //==============================================================================
 {
-    auto state = button->getToggleState();
-    if(state)
+    auto bState = button->getToggleState();
+    
+    if(bState)
     {
         m_currentIndex = in_index;
     }
@@ -55,12 +57,12 @@ void RadioButtons::SetButtonText (const int in_index, String in_buttonName)
 }
 
 //===========================
-void RadioButtons::AddListener(Listener* in)
+void RadioButtons::AddListener(Listener* in_listener)
 //===========================
 {
-    for(auto& r : m_radioButtons)
+    for(auto& radioButton : m_radioButtons)
     {
-        r->addListener(in);
+        radioButton->addListener(in_listener);
     }
 }
 
@@ -71,10 +73,10 @@ void RadioButtons::resized()
     Rectangle<int>  area(-40,0,40,15);
     auto row = area;
     
-    for (auto* b : m_radioButtons)
+    for (auto* pRadioButton : m_radioButtons)
     {
         row.setX(row.getX() + 40);
-        b->setBounds (row);
+        pRadioButton->setBounds (row);
     }
     
 }

@@ -101,24 +101,6 @@ void ToolBar::ShowWindow(Component& button, DialogType type)
 					: (result.isLocalFile() ? result.getLocalFile().getFullPathName()
 						: result.toString(true));
 
-				// Android and iOS file choosers will create placeholder files for chosen
-				// paths, so we may as well write into those files.
-#if JUCE_ANDROID || JUCE_IOS
-				if (!result.isEmpty())
-				{
-					std::unique_ptr<InputStream>  wi(fileToSave.createInputStream());
-					std::unique_ptr<OutputStream> wo(result.createOutputStream());
-
-					if (wi.get() != nullptr && wo.get() != nullptr)
-					{
-						auto numWritten = wo->writeFromInputStream(*wi, -1);
-						jassert(numWritten > 0);
-						ignoreUnused(numWritten);
-						wo->flush();
-					}
-				}
-#endif
-
 				AlertWindow::showMessageBoxAsync(AlertWindow::InfoIcon,
 					"File Chooser...",
 					"You picked: " + name);

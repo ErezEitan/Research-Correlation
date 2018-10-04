@@ -42,12 +42,12 @@ void LinesDraw::CalculateLinesDrawPoints()
     
     Rectangle<float> rectangleSeperetorLines;
 
+    float offset = m_bCountBackword ? m_barHightLengthInPixel : 0.0f;
     for (int i = 0; i < m_numberOfSepertors; ++i)
-    {
-        
+    {        
         if (LineDraw::eVertical == m_direction)
         {
-            areaLineSeperetor.setY(i * m_barHightLengthInPixel);
+            areaLineSeperetor.setY(i * m_barHightLengthInPixel + offset);
         }
         else
         {

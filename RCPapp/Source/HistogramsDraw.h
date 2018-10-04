@@ -64,6 +64,7 @@ public:
     void CalculateHistogramLinesDrawPoints();
     void CalculateHistogramWidthAndHight();
     void CalculateHistogramBars();
+    void CalculateHistogramBorderLine();
     
     //==============================================================================
     void resized() override;
@@ -82,7 +83,7 @@ private:
     std::vector<std::vector<std::shared_ptr<HistogramsBar>>> m_vHistogramBars;
     std::vector<std::shared_ptr<LinesDraw>> m_vLineOfHistogramAxisX;
     std::vector<std::shared_ptr<LinesDraw>> m_vLineOfHistogramAxisY;
-    std::vector<Path> m_vborderPath;
+    Path m_vborderPath;
     
     std::vector<std::shared_ptr<BarDescriptorStruct>>& m_vBarDescriptors;
     RCPHeaderDescriptor& m_rcpHeaderDescriptor;
